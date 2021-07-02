@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RedHat 设置 selinux | 那个人</title><meta name="keywords" content="Linux"><meta name="author" content="wayww"><meta name="copyright" content="wayww"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="RedHat 设置 selinux设置 selinux 为 enforcing 模式  vim &#x2F;etc&#x2F;selinux&#x2F;config 修改 SELINUX&#x3D;enforcing  命令 getenforce 可以查看当前 selinux 状态  命令 setenforce 1 也可以设置 enforcing 模式，不过请注意， setenforce 无法在 Disabled 的模式底下进行模式的切">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RedHat 设置 selinux">
+<meta property="og:url" content="https://wayww.cn/posts/7fe450cb/index.html">
+<meta property="og:site_name" content="那个人">
+<meta property="og:description" content="RedHat 设置 selinux设置 selinux 为 enforcing 模式  vim &#x2F;etc&#x2F;selinux&#x2F;config 修改 SELINUX&#x3D;enforcing  命令 getenforce 可以查看当前 selinux 状态  命令 setenforce 1 也可以设置 enforcing 模式，不过请注意， setenforce 无法在 Disabled 的模式底下进行模式的切">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wayww.cn/img/c1.jpg">
+<meta property="article:published_time" content="2019-10-14T11:50:32.000Z">
+<meta property="article:modified_time" content="2021-07-02T04:02:20.105Z">
+<meta property="article:author" content="wayww">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="RHCE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wayww.cn/img/c1.jpg"><link rel="shortcut icon" href="/img/linux.png"><link rel="canonical" href="https://wayww.cn/posts/7fe450cb/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-5320847130203407',
+  enable_page_level_ads: 'true'
+});</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-07-02 04:02:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="那个人" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><img class="load-image" src="/img/loadimg.gif" alt=""/></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/c1.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">那个人</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">RedHat 设置 selinux</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-02T04:02:20.105Z" title="更新于 2021-07-02 04:02:20">2021-07-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="RedHat-设置-selinux"><a href="#RedHat-设置-selinux" class="headerlink" title="RedHat 设置 selinux"></a>RedHat 设置 selinux</h2><p>设置 selinux 为 enforcing 模式</p>
+<ol>
+<li><p><code>vim /etc/selinux/config</code> 修改 <code>SELINUX=enforcing</code></p>
+</li>
+<li><p>命令 <code>getenforce</code> 可以查看当前 selinux 状态</p>
+</li>
+<li><p>命令 <code>setenforce 1</code> 也可以设置 enforcing 模式，不过请注意， setenforce 无法在 Disabled 的模式底下进行模式的切换</p>
+</li>
+</ol>
+<hr>
+<h3 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h3><blockquote>
+<p>安全增强型 Linux（Security-Enhanced Linux）简称 SELinux，它是一个 Linux 内核模块，也是 Linux 的一个安全子系统。</p>
+</blockquote>
+<blockquote>
+<p>SELinux 主要由美国国家安全局开发。 linux 内核 2.6 及以上版本的内核都已经集成了 SELinux 模块。</p>
+</blockquote>
+<blockquote>
+<p>SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）。</p>
+</blockquote>
+<h5 id="DAC"><a href="#DAC" class="headerlink" title="DAC"></a>DAC</h5><blockquote>
+<p>在没有使用 SELinux 的操作系统中，决定一个资源是否能被访问的因素是：某个资源是否拥有对应用户的权限（读、写、执行）。</p>
+</blockquote>
+<blockquote>
+<p>只要访问这个资源的进程符合以上的条件就可以被访问。</p>
+</blockquote>
+<blockquote>
+<p>而最致命问题是，root 用户不受任何管制，系统上任何资源都可以无限制地访问。</p>
+</blockquote>
+<blockquote>
+<p>这种权限管理机制的主体是用户，也称为自主访问控制（Discretionary Access Control, DAC）。</p>
+</blockquote>
+<h5 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h5><blockquote>
+<p>在使用了 SELinux 的操作系统中，决定一个资源是否能被访问的因素除了上述因素之外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p>
+</blockquote>
+<blockquote>
+<p>这样一来，即使进程是以 root 身份运行的，也需要判断这个进程的类型以及允许访问的资源类型才能决定是否允许访问某个资源。进程的活动空间也可以被压缩到最小。</p>
+</blockquote>
+<blockquote>
+<p>即使是以 root 身份运行的服务进程，一般也只能访问到它所需要的资源。举例来说， WWW 服务器软件的达成进程为 httpd 这支程序。而默认情况下，httpd 仅能在 /var/www/ 这个目录底下存取文件，如果 httpd 这个进程想要到其他目录去存取数据时， 除了规则设定要开放外，目标目录也得要设定 成 httpd 可读取的模式 (type) 才行，即使程序出了漏洞，影响范围也只有在其允许访问的资源范围内。安全性大大增加。这种权限管理机制的主体是进程，也称为强制访问控制（Mandatory Access Control, MAC）。而 MAC 又细分为了两种方式，一种叫类别安全（MCS）模式，另一种叫多级安全（MLS）模式。</p>
+</blockquote>
+<h5 id="MAC-和-DAC-区别图"><a href="#MAC-和-DAC-区别图" class="headerlink" title="MAC 和 DAC 区别图"></a>MAC 和 DAC 区别图</h5><p><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/way-ww/mypic/master/blog/mac%26dac%E5%8C%BA%E5%88%AB%E5%9B%BE.PNG"></p>
+<p>在 DAC 模式下，只要相应目录有相应用户的权限，就可以被访问。而在 MAC 模式下，还要受进程允许访问目录范围的限制</p>
+<h5 id="selinux-运作模式"><a href="#selinux-运作模式" class="headerlink" title="selinux 运作模式"></a>selinux 运作模式</h5><p>SELinux 是透过 MAC 的方式来控管进程，他控制的主体是进程，而目标则是该进程能否读取的『文件资源』！</p>
+<ul>
+<li><p><strong><strong>主体</strong></strong> (Subject)：</p>
+<blockquote>
+<p>SELinux 主要想要管理的就是进程，主体这里完全可以等同于进程；</p>
+</blockquote>
+</li>
+<li><p><strong><strong>目标</strong></strong>(Object)：</p>
+<blockquote>
+<p>主体进程能否存取的『目标资源』一般就是文件系统。被主体访问的资源可以是文件、目录、端口、设备等；</p>
+</blockquote>
+</li>
+<li><p><strong><strong>政策</strong></strong> (Policy)：</p>
+<blockquote>
+<p>由于进程与文件数量庞大，因此 SELinux 会依据某些服务来制订基本的存取安全性政策。这些政策内还会 有详细的规则 (rule) 来指定不同的服务开放某些资源的存取与否。系统中通常有大量的文件和进程，为了节省时间和开销，通常我们只是选择性地对某些进程进行管制。而哪些进程需要管制、要怎么管制是由政策决定的。一套政策里面有多个规则。部分规则可以按照需求启用或禁用（以下把该类型的规则称为布尔型规则）。规则是模块化、可扩展的。在安装新的应用程序时，应用程序可通过添加新的模块来添加规则。用户也可以手动地增减规则。在目前的 RedHat 7.x 里面仅有提供三个 主要的政策，分别是：</p>
+</blockquote>
+<ul>
+<li><p>targeted：针对网络服务限制较多，针对本机限制较少，是预设的政策；</p>
+</li>
+<li><p>minimum：由 target 修订而来，仅针对选择的进程来保护！</p>
+</li>
+<li><p>mls：完整的 SELinux 限制，限制方面较为严格。</p>
+<p>建议使用预设的 targeted 政策即可。</p>
+</li>
+</ul>
+</li>
+<li><p><strong><strong>安全上下文</strong></strong>（Security Context）</p>
+<blockquote>
+<p>安全上下文是 SELinux 的核心, 安全上下文可以看作为「进程安全上下文」和「文件安全上下文」俩部分。一个「进程安全上下文」一般对应多个「文件安全上下文」。只有两者的安全上下文对应上了，进程才能访问文件。它们的对应关系由政策中的规则决定。文件安全上下文由文件创建的位置和创建文件的进程所决定。而且系统有一套默认值，用户也可以对默认值进行设定。需要注意的是，单纯的移动文件操作并不会改变文件的安全上下文。</p>
+</blockquote>
+</li>
+<li><p><strong><strong>安全上下文的结构与含义</strong></strong></p>
+<blockquote>
+<p>安全上下文有四个字段，分别用冒号隔开。形如：system_u:object_r:admin_home_t:s0<br><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/way-ww/mypic/master/blog/%E5%AE%89%E5%85%A8%E4%B8%8A%E4%B8%8B%E6%96%87.PNG"></p>
+</blockquote>
+</li>
+<li><p>SELinux 的工作模式</p>
+<blockquote>
+<p>SELinux 有三种工作模式，分别是：</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>enforcing：强制模式。违反 SELinux 规则的行为将被阻止并记录到日志中。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>permissive：宽容模式。违反 SELinux 规则的行为只会记录到日志中。一般为调试用。</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>disabled：关闭 SELinux。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>SELinux 工作模式可以在 /etc/selinux/config 中设定。</p>
+</blockquote>
+<blockquote>
+<p>如果想从 disabled 切换到 enforcing 或者 permissive 的话，需要重启系统。反过来也一样。</p>
+</blockquote>
+<blockquote>
+<p>enforcing 和 permissive 模式可以通过 setenforce 1|0 命令快速切换。</p>
+</blockquote>
+<blockquote>
+<p>需要注意的是，如果系统已经在关闭 SELinux 的状态下运行了一段时间，在打开 SELinux 之后的第一次重启速度可能会比较慢。因为系统必须为磁盘中的文件创建安全上下文</p>
+</blockquote>
+<blockquote>
+<p>此外需要注意的是 SELinux 日志的记录需要借助 auditd.service 这个服务，所以最好不要禁用它。</p>
+</blockquote>
+</li>
+<li><p>selinux 操作</p>
+</li>
+<li></li>
+</ul>
+<ol>
+<li><p>查询文件或目录的安全上下文</p>
+<pre><code> # ls -Z &lt;文件或目录&gt;</code></pre>
+</li>
+<li><p>查询进程的安全上下文</p>
+<pre><code> # ps -eZ | grep -E &#39;进程名&#39;</code></pre>
+</li>
+<li><p>手动修改文件或目录的安全上下文</p>
+<pre><code> # chcon &lt;选项&gt; &lt;文件或目录 1&gt; [&lt;文件或目录 2&gt;...]</code></pre>
+<p> <strong>选项功能</strong></p>
+<p> -u &lt;值&gt; 修改安全上下文的用户字段</p>
+<p> -r &lt;值&gt;修改安全上下文的角色字段</p>
+<p> -t &lt;值&gt;修改安全上下文的类型字段</p>
+<p> -l &lt;值&gt;修改安全上下文的级别字段</p>
+<p> –reference &lt;文件或目录&gt;修改与指定文件或目录相一致的安全上下文</p>
+<p> -R递归操作</p>
+<p> -h修改软链接的安全上下文（不加此选项则修改软链接对应文件）</p>
+</li>
+<li><p>把文件或目录的安全上下文恢复到默认值</p>
+<pre><code> # restorecon [选项] &lt;文件或目录 1&gt; [&lt;文件或目录 2&gt;...]
+ # restorecon -R /usr/share/nginx/html/        示例</code></pre>
+</li>
+<li><p>查询系统中的布尔型规则及其状态</p>
+<pre><code> # getsebool -a</code></pre>
+<p>由于该命令要么查询所有规则，要么只查询一个规则，所以一般都是先查询所有规则然后用 grep 筛选。</p>
+</li>
+<li><p>开关一个布尔型规则</p>
+<pre><code> # setsebool [选项] &lt;规则名称&gt; &lt;on|off&gt;        （可接 -P 选项重启依然生效）
+ # setsebool -P httpd_anon_write on            示例开启 httpd_anon_write  规则</code></pre>
+</li>
+<li><p>添加目录的默认安全上下文</p>
+<pre><code> # semanage fcontext -a -t &lt;文件安全上下文中的类型字段&gt; &quot;&lt;目录（后面不加斜杠）&gt;(/.*)?&quot;
+ 注：目录或文件的默认安全上下文可以通过 semanage fcontext -l 命令配合 grep 过滤查看</code></pre>
+</li>
+<li><p>SELinux 违规日志保存在 /var/log/audit/audit.log</p>
+</li>
+</ol>
+<p>详见： 《鸟哥的Linux私房菜》 第四版 第十六章</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">wayww</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wayww.cn/posts/7fe450cb/">https://wayww.cn/posts/7fe450cb/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wayww.cn" target="_blank">那个人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/RHCE/">RHCE</a></div><div class="post_share"><div class="social-share" data-image="/img/c1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/wechat.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/e77896bc/"><img class="prev-cover" data-lazy-src="/img/c14.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RedHat7 修改 root 密码</div></div></a></div><div class="next-post pull-right"><a href="/posts/4fe171be/"><img class="next-cover" data-lazy-src="/img/c2.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">alias 命令别名</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/1850408d/" title="RHCE 简单脚本"><img class="cover" data-lazy-src="/img/c2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">RHCE 简单脚本</div></div></a></div><div><a href="/posts/e77896bc/" title="RedHat7 修改 root 密码"><img class="cover" data-lazy-src="/img/c14.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">RedHat7 修改 root 密码</div></div></a></div><div><a href="/posts/4f3be07e/" title="Firewall 富规则"><img class="cover" data-lazy-src="/img/c2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Firewall 富规则</div></div></a></div><div><a href="/posts/81544468/" title="RedHat7 配置 ipv6"><img class="cover" data-lazy-src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">RedHat7 配置 ipv6</div></div></a></div><div><a href="/posts/921d9bcb/" title="mariadb 简单配置"><img class="cover" data-lazy-src="/img/c3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">mariadb 简单配置</div></div></a></div><div><a href="/posts/ab705277/" title="NFS 共享配置"><img class="cover" data-lazy-src="/img/c11.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">NFS 共享配置</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Livere</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC80ODMyNi8yNDgyMA=="></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">wayww</div><div class="author-info__description">人活着就不能安于现状</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/way-ww"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/way-ww" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:wangwanway@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/img/alipay.jpg" target="_blank" title="支付宝"><i class="fab fa-alipay"></i></a><a class="social-icon" href="/img/wechat.png" target="_blank" title="微信"><i class="fab fa-weixin"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">坚持每天进步一点点</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#RedHat-%E8%AE%BE%E7%BD%AE-selinux"><span class="toc-number">1.</span> <span class="toc-text">RedHat 设置 selinux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#selinux"><span class="toc-number">1.1.</span> <span class="toc-text">selinux</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#DAC"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">DAC</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MAC"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">MAC</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MAC-%E5%92%8C-DAC-%E5%8C%BA%E5%88%AB%E5%9B%BE"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">MAC 和 DAC 区别图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#selinux-%E8%BF%90%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">selinux 运作模式</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img data-lazy-src="/img/c14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linuxdeploy无法启动MySQL"/></a><div class="content"><a class="title" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL">linuxdeploy无法启动MySQL</a><time datetime="2019-10-14T12:07:32.000Z" title="发表于 2019-10-14 12:07:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/0/" title="k8s 实践"><img data-lazy-src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s 实践"/></a><div class="content"><a class="title" href="/posts/0/" title="k8s 实践">k8s 实践</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bda00998/" title="Centos7 安装 vsftp"><img data-lazy-src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Centos7 安装 vsftp"/></a><div class="content"><a class="title" href="/posts/bda00998/" title="Centos7 安装 vsftp">Centos7 安装 vsftp</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/c1.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2021 By wayww</div><div class="footer_custom_text">想要变强啊，想要像那个人一样，绝对不只是想象！</div><img src="/img/icp.png" align="center" height="18" width="18" style="display:inline-block">
+<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34019102000925" rel="external nofollow noreferrer"  target="_blank">皖公网安备 34019102000925号</a>
+<a href="https://beian.miit.gov.cn/#/Integrated/index" rel="external nofollow noreferrer"  target="_blank">皖ICP备2021008794号</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})
+setTimeout(function(){preloader.endLoading();}, 3000);</script></div><div class="js-pjax"><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk({
+      clientID: '59098f743354a81c3a4f',
+      clientSecret: '03e355c9ce993f8da44408a4fc794fa29881da69',
+      repo: 'comment',
+      owner: 'way-ww',
+      admin: ['way-ww'],
+      id: 'd91e536f2a58d65bac4ad4465456fe59',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    })
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    $.getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js', initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Livere' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>

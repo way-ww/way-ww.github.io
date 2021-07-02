@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>那个人</title>
+  
+  
+  <link href="https://wayww.cn/atom.xml" rel="self"/>
+  
+  <link href="https://wayww.cn/"/>
+  <updated>2021-07-02T04:02:20.105Z</updated>
+  <id>https://wayww.cn/</id>
+  
+  <author>
+    <name>wayww</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linuxdeploy无法启动MySQL</title>
+    <link href="https://wayww.cn/posts/b4cac3e6/"/>
+    <id>https://wayww.cn/posts/b4cac3e6/</id>
+    <published>2019-10-14T12:07:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>关于安卓系统 Root 之后使用 linuxdeploy 的 chroot 环境中无法启动 MySQL</p><p>首先一部完全 Root 后的安卓手机在使用 linuxdeploy 安装 linux 环境时推荐使用 debian 系的发行版，不要用 centos 因为 centos 无法使用 service 和 systemctl 命令来管理服务。</p><p>在 linuxdeploy 上的 debian9 无法启动MySQL 尝试多种方法依然没法解决，然后重新安装 ubuntu18.04 后依然启动不了，查阅资料后发现安卓手机内核使用了 CONFIG_ANDROID_PARANDOID_NETWORK 编译过导致无法正常使用 linux 上的服务。</p><p>解决 MySQL 无法启动也很简单，运行以下命令即可</p><p>usermod -a -G aid_inet,aid_net_raw mysql</p><p>su mysql</p><p>service mysql restart</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;关于安卓系统 Root 之后使用 linuxdeploy 的 chroot 环境中无法启动 MySQL&lt;/p&gt;
+&lt;p&gt;首先一部完全 Root 后的安卓手机在使用 linuxdeploy 安装 linux 环境时推荐使用 debian 系的发行版，不要用 centos 因为 </summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7 安装 vsftp</title>
+    <link href="https://wayww.cn/posts/bda00998/"/>
+    <id>https://wayww.cn/posts/bda00998/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、安装vsftp软件（vsftpd-not-ftp）"><a href="#一、安装vsftp软件（vsftpd-not-ftp）" class="headerlink" title="一、安装vsftp软件（vsftpd not ftp）"></a>一、安装vsftp软件（vsftpd not ftp）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vsftp</span><br></pre></td></tr></table></figure><h2 id="二、修改配置文件"><a href="#二、修改配置文件" class="headerlink" title="二、修改配置文件"></a>二、修改配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf</span><br><span class="line"></span><br><span class="line">修改为以下内容</span><br><span class="line"></span><br><span class="line">anonymous_enable&#x3D;NO  ## 禁用匿名用户登录</span><br><span class="line"></span><br><span class="line">local_enable&#x3D;YES  ## 允许系统本地实体用户登录ftp</span><br><span class="line"></span><br><span class="line">write_enable&#x3D;YES  ## 允许写入，即上传权限</span><br><span class="line"></span><br><span class="line">chroot_local_user&#x3D;YES  ## 限制登录用户在自己主目录  </span><br><span class="line"></span><br><span class="line">allow_writeable_chroot&#x3D;YES  ## 配合上一步使用，允许限制在主目录的登录用户写入</span><br></pre></td></tr></table></figure><ul><li>关于chroot_local_user 与 chroot_list_enable的组合配置</li></ul><table><thead><tr><th>-</th><th align="center">chroot_local_user=YES</th><th>chroot_local_user=NO</th></tr></thead><tbody><tr><td>chroot_list_enable=YES</td><td align="center">除了chroot_list_file用户表所有的用户都被限制在其主目录</td><td>只有chroot_list_file用户表被限制在其主目录</td></tr><tr><td>chroot_list_enable=NO</td><td align="center">所有用户都被限制在其主目录</td><td>所有用户都不会被限制在其主目录中</td></tr></tbody></table><p>注意：<br>    - 若是启用chroot_list_file选项，则该文件必须存在</p><h2 id="三、创建用户"><a href="#三、创建用户" class="headerlink" title="三、创建用户"></a>三、创建用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd -d &#x2F;var&#x2F;ftp&#x2F; -g ftp -s &#x2F;sbin&#x2F;nologin newftpuser</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="四、启动服务"><a href="#四、启动服务" class="headerlink" title="四、启动服务"></a>四、启动服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable vsftpd.service</span><br><span class="line"></span><br><span class="line">sysetmctl restart vsftpd.service</span><br></pre></td></tr></table></figure><h2 id="五、测试"><a href="#五、测试" class="headerlink" title="五、测试"></a>五、测试</h2><ul><li><p>浏览器或文件管理器输入 <a href="ftp://ip/">ftp://ip</a></p></li><li><p>服务器安装ftp命令进行测试</p>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ftp</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# ftp localhost</span><br><span class="line">Trying ::1...</span><br><span class="line">Connected to localhost (::1).</span><br><span class="line">220 (vsFTPd 3.0.2)</span><br><span class="line">Name (localhost:root): newftpuser</span><br><span class="line">331 Please specify the password.</span><br><span class="line">Password:</span><br><span class="line">230 Login successful.</span><br><span class="line">Remote system type is UNIX.</span><br><span class="line">Using binary mode to transfer files.</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>注意: /sbin/nologin用户可能无法登录ftp，需要在/etc/shells文件中加上/sbin/nologin否则系统认为其为无效用户，禁止其任何操作</p></li></ul><p>–done</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;一、安装vsftp软件（vsftpd-not-ftp）&quot;&gt;&lt;a href=&quot;#一、安装vsftp软件（vsftpd-not-ftp）&quot; class=&quot;headerlink&quot; title=&quot;一、安装vsftp软件（vsftpd not ftp）&quot;&gt;&lt;/a&gt;一、安装v</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7 配置阿里 yum 源</title>
+    <link href="https://wayww.cn/posts/a431c5ec/"/>
+    <id>https://wayww.cn/posts/a431c5ec/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>快速命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo.bak</span><br><span class="line"></span><br><span class="line">wget -O &#x2F;etc&#x2F;yum.repos.d&#x2F;CentOS-Base.repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;Centos-7.repo</span><br><span class="line"></span><br><span class="line">wget -P &#x2F;etc&#x2F;yum.repos.d&#x2F; http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;epel-7.repo</span><br><span class="line"></span><br><span class="line">yum clean all</span><br><span class="line"></span><br><span class="line">yum makecache fast</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;快速命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;b</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Failed to recive sock4 connect request ack</title>
+    <link href="https://wayww.cn/posts/12dacc4c/"/>
+    <id>https://wayww.cn/posts/12dacc4c/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为我的 archlinux 开启了 socks5 代理，所以在执行 git clone 命令时出现题示错误</p><p>解决办法</p><p><code>git config --global http.proxy &#39;socks5://127.0.0.1:1080&#39;</code></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;因为我的 archlinux 开启了 socks5 代理，所以在执行 git clone 命令时出现题示错误&lt;/p&gt;
+&lt;p&gt;解决办法&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git config --global http.proxy &amp;#39;socks5://127.0.0.1:10</summary>
+      
+    
+    
+    
+    <category term="Archlinux" scheme="https://wayww.cn/categories/Archlinux/"/>
+    
+    
+    <category term="Archlinux" scheme="https://wayww.cn/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo 部署报错 permission denied</title>
+    <link href="https://wayww.cn/posts/92cbaf29/"/>
+    <id>https://wayww.cn/posts/92cbaf29/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>具体错误：</p><p>Error: EACCES: permission denied, unlink</p><p>解决：</p><p>rm -rf ./deploy_git     </p><p>hexo clean       </p><p>hexo g       </p><p>hexo d</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;具体错误：&lt;/p&gt;
+&lt;p&gt;Error: EACCES: permission denied, unlink&lt;/p&gt;
+&lt;p&gt;解决：&lt;/p&gt;
+&lt;p&gt;rm -rf ./deploy_git     &lt;/p&gt;
+&lt;p&gt;hexo clean       &lt;/p&gt;
+&lt;p&gt;hexo g  </summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx 安装记录</title>
+    <link href="https://wayww.cn/posts/f6892ceb/"/>
+    <id>https://wayww.cn/posts/f6892ceb/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>Centos 7 yum 安装 nginx</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh http:&#x2F;&#x2F;nginx.org&#x2F;packages&#x2F;centos&#x2F;7&#x2F;noarch&#x2F;RPMS&#x2F;nginx-release-centos-7-0.el7.ngx.noarch.rpm</span><br><span class="line"></span><br><span class="line">yum install -y nginx</span><br></pre></td></tr></table></figure><p>Centos 7 编译安装nginx1.11.1</p><ol><li><p>安装之前的准备</p><ul><li><p>安装pcre(支持rewrite模块)<br><code>yum install pcre*</code> </p></li><li><p>安装ssl(可选，不需要ssl支持可跳过)<br><code>yum install openssl*</code></p></li></ul></li><li><p>安装 nginx</p><ul><li><p>建立目录<br><code>mkdir -p /usr/local/nginx/src</code> 用来存放源码包<br><code>mkdir -p /usr/local/nginx/nginx-conf/conf</code>  用来存放配置文件       </p></li><li><p>下载nginx源码包到新建的目录<br><code>wget http://nginx.org/download/nginx-1.11.1.tar.gz -P /usr/local/nginx/src</code>    </p></li><li><p>解压源码包<br><code>cd /usr/local/nginx/src &amp;&amp; tar -xzvf nginx-1.11.1.tar.gz</code></p></li><li><p>配置<br><code>./configure --prefix=/usr/local/nginx/src/nginx-1.11.1 --conf-path=/usr/localnginx/nginx-conf/vhost/nginx.conf --with-http_ssl_module --with-http_realip_module --with-http_dav_module --with-http_gzip_static_module --with-http_v2_module --with-http_stub_status_module --with-pcre</code></p></li><li><p>安装<br><code>make &amp;&amp; make install</code><br>/usr/local/nginx/nginx-conf/conf 目录里存放以网站为单位的配置文件和子目录，文件名以网站域名命名，其他配置文件放在/usr/local/nginx/nginx-conf/这样可以配置分离，互不影响，而且好定位问题。</p></li><li><p>做链接<br><code>ln -s /usr/local/nginx/nginx-1.11.1/nginx /usr/bin</code></p></li><li><p>检查版本<br><code>nginx -v</code></p><p>完成</p></li></ul></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Centos 7 yum 安装 nginx&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RHCE 简单脚本</title>
+    <link href="https://wayww.cn/posts/1850408d/"/>
+    <id>https://wayww.cn/posts/1850408d/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="RHCE-编写脚本"><a href="#RHCE-编写脚本" class="headerlink" title="RHCE 编写脚本"></a>RHCE 编写脚本</h2><pre><code>    在 system1上创建一个名为/root/foo.sh 的脚本，让其提供下列特性:    当运行/root/foo.sh redhat，输出为 fedora；    当运行/root/foo.sh fedora，输出为 redhat；    当没有任何参数或者参数不是 redhat 或者 fedora 时，其错误输出产生以下的信息:/root/foo.sh redhat|fedora    在 system1上创建一个脚本，名为/root/batchusers，此脚本能为系统system1创建本地用户，且这些用户名来自一个文件，同时满足:    此脚本要求提供一个参数，此参数就是包含用户名列表的文件；    如果没有提供参数，此脚本应该给出下面的提示信息 Usage: /root/batchusers userfile 然后退出并返回相应的值；    如果提供一个不存在的文件名，此脚本应该给出下面的提示信息 Input file not found 然后退出并返回相应的值；    创建的用户登陆 Shell 为/bin/false，此脚本不需要为用户设置密码；    您可以从下面的 URL 获取用户名列表作为测试用:http://classroom.example.com/pub/materials/userlist</code></pre><hr><ul><li><p>编写脚本 foo.sh</p><pre><code>  &gt;# vim /root/foo.sh  #!/bin/bash  if [ &quot;$1&quot; = &quot;fedora&quot; ];then  echo redhat  elif [ &quot;$1&quot; = &quot;redhat&quot; ];then  echo fedora  else  echo &quot;/root/foo.sh redhat|fedora&quot;  fi  &gt;# chmod +x /root/foo.sh  &gt;# ./root/foo.sh redhat  fedora</code></pre></li><li><p>编写脚本 batchuser</p><pre><code>  &gt;# vim /root/batchusers  #!/bin/bash  if [ &quot;$#&quot; = 0 ];then  echo &quot;Usage:/root/batchusers userfile&quot;  exit 1  elif [ ! -f &quot;$1&quot; ];then  echo &quot;Inputfile not found&quot;  exit 2  else  for name in $(cat $1)  do  useradd -s /bin/false $name  done  fi  &gt;# chmod +x /root/batchusers</code></pre></li></ul><p><strong>finish</strong></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;RHCE-编写脚本&quot;&gt;&lt;a href=&quot;#RHCE-编写脚本&quot; class=&quot;headerlink&quot; title=&quot;RHCE 编写脚本&quot;&gt;&lt;/a&gt;RHCE 编写脚本&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;    在 system1上创建一个名为/root/foo.sh 的</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="RHCE" scheme="https://wayww.cn/tags/RHCE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RedHat7 修改 root 密码</title>
+    <link href="https://wayww.cn/posts/e77896bc/"/>
+    <id>https://wayww.cn/posts/e77896bc/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li>开机启动系统进入 grub 选择启动内核项时按键盘 e 进入编辑模式</li><li>按键盘的方向键向下移动光标到 linux16 所在行再按下键盘上的 end 按键定位到所在行的末尾处</li><li>在行末添加 <code>rd.break console=tty0</code></li><li>按下 <code>ctrl+x</code> 以此设定启动到shell</li><li>重新挂载 /sysroot 可读可写 <code>mount -o remount,rw /sysroot</code></li><li>换根 <code>chroot /sysroot</code> </li><li>复制一份原有的 shadow 文件<code>cp /etc/shadow /etc/shadow_bak</code></li><li>重新录入 root 密码 <code>passwd root</code></li><li>使 selinux 生效(按实际情况可选) <code>touch /.autorelabel</code></li><li>退出环境并重启 <code>exit</code> 之后 <code>reboot</code></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;开机启动系统进入 grub 选择启动内核项时按键盘 e 进入编辑模式&lt;/li&gt;
+&lt;li&gt;按键盘的方向键向下移动光标到 linux16 所在行再按下键盘上的 end 按键定位到所在行的末尾处&lt;/li&gt;
+&lt;li&gt;在行末添加 &lt;code&gt;rd.break consol</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="RHCE" scheme="https://wayww.cn/tags/RHCE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RedHat 设置 selinux</title>
+    <link href="https://wayww.cn/posts/7fe450cb/"/>
+    <id>https://wayww.cn/posts/7fe450cb/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="RedHat-设置-selinux"><a href="#RedHat-设置-selinux" class="headerlink" title="RedHat 设置 selinux"></a>RedHat 设置 selinux</h2><p>设置 selinux 为 enforcing 模式</p><ol><li><p><code>vim /etc/selinux/config</code> 修改 <code>SELINUX=enforcing</code></p></li><li><p>命令 <code>getenforce</code> 可以查看当前 selinux 状态</p></li><li><p>命令 <code>setenforce 1</code> 也可以设置 enforcing 模式，不过请注意， setenforce 无法在 Disabled 的模式底下进行模式的切换</p></li></ol><hr><h3 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h3><blockquote><p>安全增强型 Linux（Security-Enhanced Linux）简称 SELinux，它是一个 Linux 内核模块，也是 Linux 的一个安全子系统。</p></blockquote><blockquote><p>SELinux 主要由美国国家安全局开发。 linux 内核 2.6 及以上版本的内核都已经集成了 SELinux 模块。</p></blockquote><blockquote><p>SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）。</p></blockquote><h5 id="DAC"><a href="#DAC" class="headerlink" title="DAC"></a>DAC</h5><blockquote><p>在没有使用 SELinux 的操作系统中，决定一个资源是否能被访问的因素是：某个资源是否拥有对应用户的权限（读、写、执行）。</p></blockquote><blockquote><p>只要访问这个资源的进程符合以上的条件就可以被访问。</p></blockquote><blockquote><p>而最致命问题是，root 用户不受任何管制，系统上任何资源都可以无限制地访问。</p></blockquote><blockquote><p>这种权限管理机制的主体是用户，也称为自主访问控制（Discretionary Access Control, DAC）。</p></blockquote><h5 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h5><blockquote><p>在使用了 SELinux 的操作系统中，决定一个资源是否能被访问的因素除了上述因素之外，还需要判断每一类进程是否拥有对某一类资源的访问权限。</p></blockquote><blockquote><p>这样一来，即使进程是以 root 身份运行的，也需要判断这个进程的类型以及允许访问的资源类型才能决定是否允许访问某个资源。进程的活动空间也可以被压缩到最小。</p></blockquote><blockquote><p>即使是以 root 身份运行的服务进程，一般也只能访问到它所需要的资源。举例来说， WWW 服务器软件的达成进程为 httpd 这支程序。而默认情况下，httpd 仅能在 /var/www/ 这个目录底下存取文件，如果 httpd 这个进程想要到其他目录去存取数据时， 除了规则设定要开放外，目标目录也得要设定 成 httpd 可读取的模式 (type) 才行，即使程序出了漏洞，影响范围也只有在其允许访问的资源范围内。安全性大大增加。这种权限管理机制的主体是进程，也称为强制访问控制（Mandatory Access Control, MAC）。而 MAC 又细分为了两种方式，一种叫类别安全（MCS）模式，另一种叫多级安全（MLS）模式。</p></blockquote><h5 id="MAC-和-DAC-区别图"><a href="#MAC-和-DAC-区别图" class="headerlink" title="MAC 和 DAC 区别图"></a>MAC 和 DAC 区别图</h5><p><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/way-ww/mypic/master/blog/mac%26dac%E5%8C%BA%E5%88%AB%E5%9B%BE.PNG"></p><p>在 DAC 模式下，只要相应目录有相应用户的权限，就可以被访问。而在 MAC 模式下，还要受进程允许访问目录范围的限制</p><h5 id="selinux-运作模式"><a href="#selinux-运作模式" class="headerlink" title="selinux 运作模式"></a>selinux 运作模式</h5><p>SELinux 是透过 MAC 的方式来控管进程，他控制的主体是进程，而目标则是该进程能否读取的『文件资源』！</p><ul><li><p><strong><strong>主体</strong></strong> (Subject)：</p><blockquote><p>SELinux 主要想要管理的就是进程，主体这里完全可以等同于进程；</p></blockquote></li><li><p><strong><strong>目标</strong></strong>(Object)：</p><blockquote><p>主体进程能否存取的『目标资源』一般就是文件系统。被主体访问的资源可以是文件、目录、端口、设备等；</p></blockquote></li><li><p><strong><strong>政策</strong></strong> (Policy)：</p><blockquote><p>由于进程与文件数量庞大，因此 SELinux 会依据某些服务来制订基本的存取安全性政策。这些政策内还会 有详细的规则 (rule) 来指定不同的服务开放某些资源的存取与否。系统中通常有大量的文件和进程，为了节省时间和开销，通常我们只是选择性地对某些进程进行管制。而哪些进程需要管制、要怎么管制是由政策决定的。一套政策里面有多个规则。部分规则可以按照需求启用或禁用（以下把该类型的规则称为布尔型规则）。规则是模块化、可扩展的。在安装新的应用程序时，应用程序可通过添加新的模块来添加规则。用户也可以手动地增减规则。在目前的 RedHat 7.x 里面仅有提供三个 主要的政策，分别是：</p></blockquote><ul><li><p>targeted：针对网络服务限制较多，针对本机限制较少，是预设的政策；</p></li><li><p>minimum：由 target 修订而来，仅针对选择的进程来保护！</p></li><li><p>mls：完整的 SELinux 限制，限制方面较为严格。</p><p>建议使用预设的 targeted 政策即可。</p></li></ul></li><li><p><strong><strong>安全上下文</strong></strong>（Security Context）</p><blockquote><p>安全上下文是 SELinux 的核心, 安全上下文可以看作为「进程安全上下文」和「文件安全上下文」俩部分。一个「进程安全上下文」一般对应多个「文件安全上下文」。只有两者的安全上下文对应上了，进程才能访问文件。它们的对应关系由政策中的规则决定。文件安全上下文由文件创建的位置和创建文件的进程所决定。而且系统有一套默认值，用户也可以对默认值进行设定。需要注意的是，单纯的移动文件操作并不会改变文件的安全上下文。</p></blockquote></li><li><p><strong><strong>安全上下文的结构与含义</strong></strong></p><blockquote><p>安全上下文有四个字段，分别用冒号隔开。形如：system_u:object_r:admin_home_t:s0<br><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/way-ww/mypic/master/blog/%E5%AE%89%E5%85%A8%E4%B8%8A%E4%B8%8B%E6%96%87.PNG"></p></blockquote></li><li><p>SELinux 的工作模式</p><blockquote><p>SELinux 有三种工作模式，分别是：</p></blockquote><blockquote><ol><li>enforcing：强制模式。违反 SELinux 规则的行为将被阻止并记录到日志中。</li></ol></blockquote><blockquote><ol start="2"><li>permissive：宽容模式。违反 SELinux 规则的行为只会记录到日志中。一般为调试用。</li></ol></blockquote><blockquote><ol start="3"><li>disabled：关闭 SELinux。</li></ol></blockquote><blockquote><p>SELinux 工作模式可以在 /etc/selinux/config 中设定。</p></blockquote><blockquote><p>如果想从 disabled 切换到 enforcing 或者 permissive 的话，需要重启系统。反过来也一样。</p></blockquote><blockquote><p>enforcing 和 permissive 模式可以通过 setenforce 1|0 命令快速切换。</p></blockquote><blockquote><p>需要注意的是，如果系统已经在关闭 SELinux 的状态下运行了一段时间，在打开 SELinux 之后的第一次重启速度可能会比较慢。因为系统必须为磁盘中的文件创建安全上下文</p></blockquote><blockquote><p>此外需要注意的是 SELinux 日志的记录需要借助 auditd.service 这个服务，所以最好不要禁用它。</p></blockquote></li><li><p>selinux 操作</p></li><li></li></ul><ol><li><p>查询文件或目录的安全上下文</p><pre><code> # ls -Z &lt;文件或目录&gt;</code></pre></li><li><p>查询进程的安全上下文</p><pre><code> # ps -eZ | grep -E &#39;进程名&#39;</code></pre></li><li><p>手动修改文件或目录的安全上下文</p><pre><code> # chcon &lt;选项&gt; &lt;文件或目录 1&gt; [&lt;文件或目录 2&gt;...]</code></pre><p> <strong>选项功能</strong></p><p> -u &lt;值&gt; 修改安全上下文的用户字段</p><p> -r &lt;值&gt;修改安全上下文的角色字段</p><p> -t &lt;值&gt;修改安全上下文的类型字段</p><p> -l &lt;值&gt;修改安全上下文的级别字段</p><p> –reference &lt;文件或目录&gt;修改与指定文件或目录相一致的安全上下文</p><p> -R递归操作</p><p> -h修改软链接的安全上下文（不加此选项则修改软链接对应文件）</p></li><li><p>把文件或目录的安全上下文恢复到默认值</p><pre><code> # restorecon [选项] &lt;文件或目录 1&gt; [&lt;文件或目录 2&gt;...] # restorecon -R /usr/share/nginx/html/        示例</code></pre></li><li><p>查询系统中的布尔型规则及其状态</p><pre><code> # getsebool -a</code></pre><p>由于该命令要么查询所有规则，要么只查询一个规则，所以一般都是先查询所有规则然后用 grep 筛选。</p></li><li><p>开关一个布尔型规则</p><pre><code> # setsebool [选项] &lt;规则名称&gt; &lt;on|off&gt;        （可接 -P 选项重启依然生效） # setsebool -P httpd_anon_write on            示例开启 httpd_anon_write  规则</code></pre></li><li><p>添加目录的默认安全上下文</p><pre><code> # semanage fcontext -a -t &lt;文件安全上下文中的类型字段&gt; &quot;&lt;目录（后面不加斜杠）&gt;(/.*)?&quot; 注：目录或文件的默认安全上下文可以通过 semanage fcontext -l 命令配合 grep 过滤查看</code></pre></li><li><p>SELinux 违规日志保存在 /var/log/audit/audit.log</p></li></ol><p>详见： 《鸟哥的Linux私房菜》 第四版 第十六章</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;RedHat-设置-selinux&quot;&gt;&lt;a href=&quot;#RedHat-设置-selinux&quot; class=&quot;headerlink&quot; title=&quot;RedHat 设置 selinux&quot;&gt;&lt;/a&gt;RedHat 设置 selinux&lt;/h2&gt;&lt;p&gt;设置 selinux</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="RHCE" scheme="https://wayww.cn/tags/RHCE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alias 命令别名</title>
+    <link href="https://wayww.cn/posts/4fe171be/"/>
+    <id>https://wayww.cn/posts/4fe171be/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>alias 命令用来设置 Linux　shell 命令的别名。可以使用alias命令将较长的命令简写方便使用。</code></pre><ul><li><p>基本用法</p><pre><code>  # alias rm=&#39;echo do not use rm&#39;            临时生效，离开当前 shell 和重启后失效</code></pre></li><li><p>永久生效</p><pre><code>  将 alias 命令写入到 bashrc 或 profile 文件中，重启或者 source 永久生效</code></pre></li><li><p>priofile 和 bashrc 加载过程</p></li></ul><p><img src= "/img/loading.gif" data-lazy-src="https://raw.githubusercontent.com/way-ww/mypic/master/blog/profile%E5%8A%A0%E8%BD%BD.PNG"></p><ul><li><p>冲突内容最后加载的生效</p></li><li><p>非登录 shell 无法读取 /etc/profile</p></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;pre&gt;&lt;code&gt;alias 命令用来设置 Linux　shell 命令的别名。可以使用alias命令将较长的命令简写方便使用。&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;基本用法&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  # alias rm=&amp;#39;echo do no</summary>
+      
+    
+    
+    
+    <category term="Command" scheme="https://wayww.cn/categories/Command/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Command" scheme="https://wayww.cn/tags/Command/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Archlinux 搜狗输入法崩溃</title>
+    <link href="https://wayww.cn/posts/4ea9ff86/"/>
+    <id>https://wayww.cn/posts/4ea9ff86/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天 archlinux 开机后就显示搜狗输入法崩溃，请删除.config/sogou*</p><p>然而照做之后重启任然没有解决，依然会提示搜狗输入法异常</p><p>在终端运行 sogou-qimpanel 后显示 libfcitx-qt.so 这个库缺失,这个库函数是属于fcitx-qt4 这个包中的，故只需要安装 fcitx-qt4 这个包就好了</p><p>yay -S fcitx-qt4</p><p>重启输入法问题解决</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;今天 archlinux 开机后就显示搜狗输入法崩溃，请删除.config/sogou*&lt;/p&gt;
+&lt;p&gt;然而照做之后重启任然没有解决，依然会提示搜狗输入法异常&lt;/p&gt;
+&lt;p&gt;在终端运行 sogou-qimpanel 后显示 libfcitx-qt.so 这个库缺失,这个库函</summary>
+      
+    
+    
+    
+    <category term="Archlinux" scheme="https://wayww.cn/categories/Archlinux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Archlinux" scheme="https://wayww.cn/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Archlinux 安装 windows 字体</title>
+    <link href="https://wayww.cn/posts/c25e56ca/"/>
+    <id>https://wayww.cn/posts/c25e56ca/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>Linux上自带的字体许多情况下不够用，尤其是在打开Windows下的文件时经常会出现乱码的情况。</p><p>为了一劳永逸，我们就直接把 windows 的字体搬到 Linux中。</p><p>这很简单，首先你要复制 windows 系统 中 C:\Windows\Fonts 中的所有字体</p><p>然后在 Linux 中新建文件夹</p><p>sudo mkdir /usr/share/fonts/windows</p><p>接下来把刚才复制的字体全部粘贴到新建的文件夹中</p><p>最后生成字体缓存</p><p>fc-cache -f</p><p>完成</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Linux上自带的字体许多情况下不够用，尤其是在打开Windows下的文件时经常会出现乱码的情况。&lt;/p&gt;
+&lt;p&gt;为了一劳永逸，我们就直接把 windows 的字体搬到 Linux中。&lt;/p&gt;
+&lt;p&gt;这很简单，首先你要复制 windows 系统 中 C:\Windows\F</summary>
+      
+    
+    
+    
+    <category term="Archlinux" scheme="https://wayww.cn/categories/Archlinux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Archlinux" scheme="https://wayww.cn/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Archlinux 安装搜狗输入法</title>
+    <link href="https://wayww.cn/posts/79d76506/"/>
+    <id>https://wayww.cn/posts/79d76506/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>安装可能需要 archlinuxcn 的源，我这里已经配置好了</p><p>一、安装 fcitx fcitx-configtool fcitx-im fcitx-sogoupinyin</p><p>pacman -S fcitx fcitx-configtool fcitx-im fcitx-sogoupinyin　</p><p>二、在 ~/.xprofile 文件中添加以下内容</p><p>export GTK_IM_MODULE=fcitx<br>export QT_IM_MODULE=fcitx<br>export XMODIFFIERS=”@im=fcitx”<br>fcitx -d -r –enable sogou-qimpanel</p><p>三、在 /etc/environment 文件中加入以下内容</p><p>GTK_IM_MODULE=fcitx<br>QT_IM_MODULE=fcitx<br>XMODIFIERS=@im=fcitx</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;安装可能需要 archlinuxcn 的源，我这里已经配置好了&lt;/p&gt;
+&lt;p&gt;一、安装 fcitx fcitx-configtool fcitx-im fcitx-sogoupinyin&lt;/p&gt;
+&lt;p&gt;pacman -S fcitx fcitx-configtool fci</summary>
+      
+    
+    
+    
+    <category term="Archlinux" scheme="https://wayww.cn/categories/Archlinux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Archlinux" scheme="https://wayww.cn/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7 安装 Mysql</title>
+    <link href="https://wayww.cn/posts/7777a9fa/"/>
+    <id>https://wayww.cn/posts/7777a9fa/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>1 下载MySQL的repo源</p><p>wget <a href="http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm">http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm</a></p><p>2 安装下载的RPM包</p><p>sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm</p><p>3 安装这个包后会使用俩个mysql的yum repo源</p><p>4 安装MySQL</p><p>sudo yum install mysql-server</p><p>5 完成。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;1 下载MySQL的repo源&lt;/p&gt;
+&lt;p&gt;wget &lt;a href=&quot;http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm&quot;&gt;http://repo.mysql.com/mysql-communit</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Mysql" scheme="https://wayww.cn/tags/Mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7 设置时区和时间同步</title>
+    <link href="https://wayww.cn/posts/390c8d32/"/>
+    <id>https://wayww.cn/posts/390c8d32/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li>安装ntp软件包       </li></ol><p><code>yum install ntp</code></p><ol start="2"><li>设置服务自启动       </li></ol><p><code>systemctl enable ntpd</code></p><ol start="3"><li>启动ntp服务      </li></ol><p><code>systemctl start ntpd</code></p><ol start="4"><li>修改系统时区     </li></ol><p><code>ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</code></p><ol start="5"><li>date查看当前时间</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;安装ntp软件包       &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;yum install ntp&lt;/code&gt;&lt;/p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;设置服务自启动       &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;systemctl enab</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 命令 -- cp</title>
+    <link href="https://wayww.cn/posts/3354cd2f/"/>
+    <id>https://wayww.cn/posts/3354cd2f/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>cp 命令用来复制文件或者目录，是Linux 系统中最常用的命令之一。一般情况下，shell会设置一个别名，在命令行下复制文件时，如果目标文件已经存在，就会询问是否覆盖，不管你是否使用了参数 -i 。但是如果在 shell 脚本中执行 cp 时，没有 -i 参数时不会询问是否覆盖。这说明命令行和 shell 脚本的执行方式是略有不同的。</p><p>命令格式    </p><pre><code>cp [选项] [-T] 源 目的</code></pre><p>命令功能</p><pre><code>将源文件复制至目标文件或者将多个源文件复制到目的目录中。</code></pre><p>命令行参数</p><pre><code>-a， 此选项通常在复制目录是使用，它保留链接、文件属性并复制目录下的所有内容。-d， 复制时保留链接。-f， 覆盖已经存在的目标文件且不给出提示。-i， 在覆盖目标文件之前给出提示，要求用户确认是否覆盖（y/n）-p， 复制内容包括所有属性：mode ownership timestamps–preserve[=ATTR_LIST] 默认参数和 -p 一样，可选参数还有：context links xattr all–no-preserver[=ATTR_LIST] 不保留指定的属性-r， 若给出的源文件是一个目录文件，此时将复制目录下所有的子目录和文件。-l， 不复制文件只是生成硬链接。-s， 不复制文件只生成软链接。-u， 仅在源文件比目标文件新或者目标文件不存在的情况下复制-t， 接目录名，将多个源文件复制到指定目录中</code></pre><p>示例</p><p>1.不加参数在有权限复制的情况下属主（ownership）和时间戳（timestamps）均改变</p><pre><code>ww@debian:~/test$ ll /etc/mysql/总用量 24drwxr-xr-x 2 root root 4096 9月  15 12:50 conf.d-rw------- 1 root root  277 9月  17 13:13 debian.cnf-rwxr-xr-x 1 root root 1620 8月   4 02:44 debian-start-rw-r--r-- 1 root root  869 8月   4 02:44 mariadb.cnfdrwxr-xr-x 2 root root 4096 9月  17 13:21 mariadb.conf.dlrwxrwxrwx 1 root root   24 9月  15 12:50 my.cnf -&gt; /etc/alternatives/my.cnf-rw-r--r-- 1 root root  839 8月   3  2016 my.cnf.fallbackww@debian:~/test$ cp /etc/mysql/debian-start /home/ww/test/ww@debian:~/test$ ll总用量 4-rwxr-xr-x 1 ww ww 1620 9月  22 22:19 debian-start</code></pre><p>2.选项-p 会保留源文件的属主和时间戳属性，但这里属主没有改变的原因是普通用户没法创建root文件</p><pre><code>ww@debian:~/test$ cp -p /etc/mysql/debian-start /home/ww/test/ww@debian:~/test$ ll总用量 4-rwxr-xr-x 1 ww ww 1620 8月   4 02:44 debian-start</code></pre><p>3.当root用户使用-p选项时完整的保留了源文件的所有属性</p><pre><code>root@debian:~# cp -p /home/ww/test/debian-start /root/root@debian:~# ll总用量 8-rwxr-xr-x 1 ww   ww   1620 8月   4 02:44 debian-startdrwxr-xr-x 2 root root 4096 9月  17 14:46 frp</code></pre><p>4.保留属主不变，时间戳变了</p><pre><code>root@debian:~# cp --preserve=ownership /home/ww/test/debian-start /root/root@debian:~# ll总用量 8-rwxr-xr-x 1 ww   ww   1620 9月  22 22:37 debian-startdrwxr-xr-x 2 root root 4096 9月  17 14:46 frp</code></pre><p>结束</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;cp 命令用来复制文件或者目录，是Linux 系统中最常用的命令之一。一般情况下，shell会设置一个别名，在命令行下复制文件时，如果目标文件已经存在，就会询问是否覆盖，不管你是否使用了参数 -i 。但是如果在 shell 脚本中执行 cp 时，没有 -i 参数时不会询问是</summary>
+      
+    
+    
+    
+    <category term="Command" scheme="https://wayww.cn/categories/Command/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Command" scheme="https://wayww.cn/tags/Command/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Debian 安装 php7.2</title>
+    <link href="https://wayww.cn/posts/c86d5bc/"/>
+    <id>https://wayww.cn/posts/c86d5bc/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>添加 sury.org 的repo</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt-get -y install apt-transport-https lsb-release ca-certificates</span><br><span class="line"></span><br><span class="line">wget -O &#x2F;etc&#x2F;apt&#x2F;trusted.gpg.d&#x2F;php.gpg https:&#x2F;&#x2F;packages.sury.org&#x2F;php&#x2F;apt.gpg</span><br><span class="line"></span><br><span class="line">sh -c &#39;echo &quot;deb https:&#x2F;&#x2F;packages.sury.org&#x2F;php&#x2F; $(lsb_release -sc) main&quot; &gt; &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;php.list&#39;</span><br><span class="line"></span><br><span class="line">apt-get update</span><br></pre></td></tr></table></figure><p>end</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;添加 sury.org 的repo&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker 简明记录</title>
+    <link href="https://wayww.cn/posts/a7c9ce0d/"/>
+    <id>https://wayww.cn/posts/a7c9ce0d/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Docker-简介"><a href="#Docker-简介" class="headerlink" title="Docker 简介"></a>Docker 简介</h2><p>Docker 是一项虚拟化容器技术，提到虚拟化就不得不提虚拟机。docker 和虚拟机是不同的，虚拟机事实上是对硬件进行虚拟化然后再在其基础上运行一个完整的操作系统而docker是一种操作系统级的虚拟化技术,docker内的应用进程是直接运行在宿主的内核上的，容器没有自己的内核也没有虚拟化的硬件，这也使得docker具有轻便的特点。Docker是由Google公司利用 Go 语言开发实现的。核心技术是 Linux 内核的 cgroup 和 namespace 及 AUFS Union FS等。由于隔离的进程独立于宿主和其他的隔离的进程因此也被叫做容器。</p><hr><h2 id="Docker-基本概念"><a href="#Docker-基本概念" class="headerlink" title="Docker 基本概念"></a>Docker 基本概念</h2><ul><li>镜像(image)</li><li>容器(container)</li><li>仓库(repository)</li></ul><h3 id="Docker-镜像"><a href="#Docker-镜像" class="headerlink" title="Docker 镜像"></a>Docker 镜像</h3><p>可以理解成一个操作系统的 .iso 镜像，实际上镜像(image)是一个特殊的文件系统，其内包含容器运行时所需的程序、库函数、资源、配置文件等。Docker 镜像被设计为分层存储的结构即docker镜像并不是像 iso 镜像那样由一个文件组成而是由多个文件联合组成。分层存储使得镜像的复用和定制变得更加容易。</p><h3 id="Docker-容器"><a href="#Docker-容器" class="headerlink" title="Docker 容器"></a>Docker 容器</h3><p>如果说 docker 镜像可以用 .iso 镜像来比较,那么 docker 容器就可以看作 .iso 镜像文件为基础安装的操作系统，即 docker 容器是 docker 镜像运行时的实体。容器可以被创建，启动，暂停，停止和删除等。<br>容器的实质是一个进程，但和直接在宿主上运行的进程不同，docker 容器进程运行在属于自己的独立的命名空间。因此容器拥有自己的 root 文件系统，网络配置和进程空间等。和镜像一样docker 容器也是分层存储的，docker容器运行时以docker镜像为基础层，再在其基础上创建一个当前容器的存储层，需要注意的是容器存储层的生命周期和容器一样，当容器消亡的时候容器存储层也会随之消失，因此，任何存储在容器存储层的信息都会随容器删除而丢失。</p><h3 id="Docker-仓库"><a href="#Docker-仓库" class="headerlink" title="Docker 仓库"></a>Docker 仓库</h3><p>Docker 仓库是用来存放 docker 镜像的服务。Docker Registry 包含公开和私有的docker镜像存取服务。其中公开服务常用的是官网提供的Docker Hub 也是Docker 默认的Registry,可以类比GitHub 的功能。不过和GitHub 一样，国内访问速度极慢，因此国内通常用的最多的还是国内的镜像服务器比如阿里云。</p><hr><h2 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker 安装"></a>Docker 安装</h2><p>获取更多 linux 发行版的详细安装指南请参考 <a href="https://docs.docker.com/install/">Docker 官方安装教程</a></p><p><strong>Centos7 安装 Docker</strong></p><p>系统要求：</p><ul><li>Docker 最低支持 Centos7</li><li>CPU 架构为 64 位</li><li>Linux 内核版本不低于 3.10 (因为overlay2存储驱动的原因，内核最好选择4.44及以上版本)</li></ul><h3 id="自动安装"><a href="#自动安装" class="headerlink" title="自动安装"></a>自动安装</h3><p>官方提供的自动安装脚本(因为网速原因实际上国内多用阿里云的脚本)：</p><p><code>&gt;# curl -ssL https://get.docker.com/ | sh</code></p><p>阿里云自动安装脚本：</p><p><code>&gt;# curl -sSL    http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet    |   sh </code></p><h3 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h3><p>/etc/sysctl.conf 末尾添加内核参数(ipv6有关)</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables &#x3D; 1 </span><br><span class="line">net.bridge.bridge-nf-call-iptables  &#x3D; 1 </span><br></pre></td></tr></table></figure><p>重新加载 sysctl.conf</p><p><code>&gt;# sysctl -p       </code></p><p> 升级内核为4.44(建议)</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;# rpm -Uvh http:&#x2F;&#x2F;www.elrepo.org&#x2F;elrepo-release-7.0-3.el7.elrepo.noarch.rpm</span><br><span class="line">&gt;# yum --enablerepo&#x3D;elrepo-kernel install -y kernel-lt</span><br><span class="line">&gt;# grub2-set-default &quot;CentOS Linux (4.4.215-1.el7.elrepo.x86_64) 7 (Core)&quot;</span><br></pre></td></tr></table></figure><p>关闭selinux 和 firewalld (实验环境)</p><p> 安装必须组件</p><p><code>&gt;# yum -y install yum-utils  device-mapper-persistent-data lvm2</code></p><ul><li>添加 yum 源</li></ul><p><code>&gt;# yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</code></p><p><code>&gt;# yum-config-manager --enable docker-ce.repo</code></p><p>安装 docker</p><p><code>&gt;# yum update -y &amp;&amp; yum install docker-ce -y</code></p><p>建立 docker 用户组</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;# groupadd docker</span><br><span class="line">&gt;# usermod -aG docker $USER</span><br></pre></td></tr></table></figure><p>启动 docker</p><p><code>&gt;# systemctl  enable docker &amp;&amp; systemctl start docker</code></p><hr><h2 id="Docker-常用命令"><a href="#Docker-常用命令" class="headerlink" title="Docker 常用命令"></a>Docker 常用命令</h2><p>docker 镜像相关命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;# docker pull nginx:latest    #拉取docker镜像到本地</span><br><span class="line">&gt;# docker images 或 docker image ls    #列出本地镜像</span><br><span class="line">&gt;# docker images -q   #只列出镜像的杂凑值</span><br><span class="line">&gt;# docker image rm nginx 或 docker rmi nginx   # 删除镜像</span><br><span class="line">&gt;# docker rmi $(docker images -q)</span><br></pre></td></tr></table></figure><p>docker 容器相关命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;# docker container run -itd -e a&#x3D;123 -p 8080:80 --network host --name nginx-test nginx    #创建容器后台运行</span><br><span class="line">&gt;# docker ps   #查看运行的容器</span><br><span class="line">&gt;# docker container stop nginx-test   #关闭容器</span><br><span class="line">&gt;# docker container start nginx-test   #启动容器</span><br><span class="line">&gt;# docker container stats nginx-test   #查看容器状态(cpu，内存，网络，磁盘读写等)</span><br><span class="line">&gt;# docker container attach nginx-test   #进入容器,此时 exit 退出的话容器也会终止,若要不停止容器退出可用快捷键 ctrl+p+q</span><br><span class="line">&gt;# docker container exec -it nginx-test sh   #进入容器，此时 exit 退出容器也不会终止 </span><br><span class="line">&gt;# docker container logs nginx-test   #查看后台容器日志 </span><br></pre></td></tr></table></figure><p>容器相关常用选项</p><table><thead><tr><th>选项</th><th align="center">长选项</th><th>意义</th></tr></thead><tbody><tr><td>-i</td><td align="center">–interactive</td><td>交互式</td></tr><tr><td>-t</td><td align="center">–tty</td><td>分配伪终端</td></tr><tr><td>-d</td><td align="center">–detach</td><td>后台运行容器</td></tr><tr><td>-a</td><td align="center">–attach</td><td>附加到运行的容器</td></tr><tr><td>-e</td><td align="center">–env</td><td>设置环境变量</td></tr><tr><td>-e</td><td align="center">–env-file</td><td>从文件读取环境变量</td></tr><tr><td>-p</td><td align="center">–publish</td><td>绑定容器和宿主端口”-p 8080:80”</td></tr><tr><td>-P</td><td align="center">–publish-all</td><td>绑定所有容器到宿主机随机端口</td></tr><tr><td>-h</td><td align="center">–hostname</td><td>设置容器主机名</td></tr><tr><td>-v</td><td align="center">–volume</td><td>挂载宿主机目录到容器</td></tr><tr><td></td><td align="center">–restart</td><td>设置重启策略(always,on-failure,no)</td></tr><tr><td>-m</td><td align="center">–memory</td><td>限制最大内存</td></tr><tr><td></td><td align="center">–cpus</td><td>指定cpu数目</td></tr></tbody></table><h2 id="Docker-数据管理"><a href="#Docker-数据管理" class="headerlink" title="Docker 数据管理"></a>Docker 数据管理</h2><p>Docker 容器内的数据会伴随容器的生命结束而消失，仅限于容器内部使用。为了能够数据共享和持久存储，docker默认提供了三种数据存储方式</p><ul><li>volumes: 可由 docker 管理创建的文件系统，属于宿主机的一部分，位于宿主机的 /var/lib/docker/volumes</li><li>bind mounts: 可以存储在指定的宿主机的任意位置,有点类似宿主机目录软链接到容器</li><li>tmpfs: 比较特别，其挂载在宿主机系统的 <strong>内存</strong> 中且不会写入到宿主机的文件系统中</li></ul><h3 id="volume-创建和管理"><a href="#volume-创建和管理" class="headerlink" title="volume 创建和管理"></a>volume 创建和管理</h3><p>常用命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;# docker volume create mysql-vol     创建名 mysql-vol 数据卷</span><br><span class="line">&gt;# docker volume ls     列出已有数据卷</span><br><span class="line">&gt;# docker volume rm mysql-vol     删除数据卷</span><br><span class="line">&gt;# docker volume inspect mysql-vol     列出数据卷详细信息</span><br><span class="line">&gt;# docker volume prune     删除所有未使用的数据卷</span><br></pre></td></tr></table></figure><p>容器挂载数据卷</p><p><code>&gt;# docker container run -itd --name nginx-test --mount src=mysql-vol,dst=/usr/share/nginx/html nginx</code></p><p>上面的命令选项中的数据卷若是没有被创建，执行时将自动创建匿名卷并挂载</p><h3 id="bind-使用"><a href="#bind-使用" class="headerlink" title="bind 使用"></a>bind 使用</h3><p>bind 可以看作是将宿主机中的目录绑定到容器的目录上，从而达到持久存储的目的。它与 volume 的区别是，不需要再创建和管理，直接利用宿主机上现成的资源即可。</p><p><code>&gt;# docker container run -itd --name nginx-test2 --mount type=bind,src=/var/www/html,dst=/usr/share/nginx/html nginx</code><br>和正常的挂载一样，若是挂载点在挂载后，作为挂载点目录中的原来的文件默认会被隐藏</p><h2 id="Docker-网络"><a href="#Docker-网络" class="headerlink" title="Docker 网络"></a>Docker 网络</h2><p>Docker 支持五种网络模式</p><ul><li>bridge 默认网络模式，容器启动后默认创建的网桥</li><li>host 容器不会获得一个独立的network namespace而是与宿主机共用</li><li>none 不为容器配置网卡，只有lo卡</li><li>container 与指定的容器使用同一个network namespace，网卡配置也是相同的</li><li>自定义</li></ul><p>使用docker网络</p><p><code>&gt;# dcoker container run -itd --name bs --net host busybox</code></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Docker-简介&quot;&gt;&lt;a href=&quot;#Docker-简介&quot; class=&quot;headerlink&quot; title=&quot;Docker 简介&quot;&gt;&lt;/a&gt;Docker 简介&lt;/h2&gt;&lt;p&gt;Docker 是一项虚拟化容器技术，提到虚拟化就不得不提虚拟机。docker 和虚拟</summary>
+      
+    
+    
+    
+    <category term="Docker" scheme="https://wayww.cn/categories/Docker/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Docker" scheme="https://wayww.cn/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker 实践 Lnmp 搭建 wordpress</title>
+    <link href="https://wayww.cn/posts/5c104f/"/>
+    <id>https://wayww.cn/posts/5c104f/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>前提：</p><ul><li>在宿主机 centos7 上操作</li><li>宿主机已安装docker和mysql客户端</li><li>已配置宿主机ip：192.168.122.126</li></ul><h2 id="自定义网络"><a href="#自定义网络" class="headerlink" title="自定义网络"></a>自定义网络</h2><p><code>&gt;# docker network create lnmp</code></p><h2 id="创建mysql-vol数据卷"><a href="#创建mysql-vol数据卷" class="headerlink" title="创建mysql-vol数据卷"></a>创建mysql-vol数据卷</h2><p><code>&gt;# docker volume create mysql-vol</code></p><h2 id="创建mysql容器"><a href="#创建mysql容器" class="headerlink" title="创建mysql容器"></a>创建mysql容器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker container run -itd \</span><br><span class="line">--name lnmp-mysql \</span><br><span class="line">--net lnmp \</span><br><span class="line">--mount src&#x3D;mysql-vol,dst&#x3D;&#x2F;var&#x2F;lib&#x2F;mysql \</span><br><span class="line">-p 3306:3306</span><br><span class="line">-e MYSQL_ROOT_PASSWORD&#x3D;123 \</span><br><span class="line">mysql --character-set-server&#x3D;utf8</span><br></pre></td></tr></table></figure><h2 id="创建wordpress数据库"><a href="#创建wordpress数据库" class="headerlink" title="创建wordpress数据库"></a>创建wordpress数据库</h2><p><code>&gt;# mysql -h192.168.122.126 -uroot -p123</code></p><p><code>&gt; create database wp;</code></p><p><code>&gt; exit</code></p><h2 id="创建nginx和php容器"><a href="#创建nginx和php容器" class="headerlink" title="创建nginx和php容器"></a>创建nginx和php容器</h2><p>注：本步骤使用的richarvey/nginx-php-fpm容器包含了nginx和php</p><p><code>&gt;# mkdir /wwwhtml</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker container run -itd \</span><br><span class="line">--name lnmp-web \</span><br><span class="line">--net lnmp \</span><br><span class="line">-p 8080:80 \</span><br><span class="line">--mount type&#x3D;bind,src&#x3D;&#x2F;wwwhtml,dst&#x3D;&#x2F;var&#x2F;www&#x2F;html richarvey&#x2F;nginx-php-fpm</span><br></pre></td></tr></table></figure><h2 id="下载wordpress压缩包"><a href="#下载wordpress压缩包" class="headerlink" title="下载wordpress压缩包"></a>下载wordpress压缩包</h2><p><code>&gt;# wget https://cn.wordpress.org/latest-zh_CN.tar.gz -O /wwwhtml</code></p><p>解压wordpress</p><p><code>&gt;# tar -xzvf wordpress-5.3.2-zh_CN.tar.gz</code></p><h2 id="访问web"><a href="#访问web" class="headerlink" title="访问web"></a>访问web</h2><p>浏览器打开<a href="http://192.168.122.126:8080/wordpress">http://192.168.122.126:8080/wordpress</a></p><p>查看到wordpress登录页面即代表完成搭建<br>剩余步骤按照网页提示即可完成wordpress的搭建</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;前提：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在宿主机 centos7 上操作&lt;/li&gt;
+&lt;li&gt;宿主机已安装docker和mysql客户端&lt;/li&gt;
+&lt;li&gt;已配置宿主机ip：192.168.122.126&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;自定义网络&quot;&gt;&lt;a href=&quot;#自定</summary>
+      
+    
+    
+    
+    <category term="Docker" scheme="https://wayww.cn/categories/Docker/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Docker" scheme="https://wayww.cn/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux 命令 -- find</title>
+    <link href="https://wayww.cn/posts/23982c6e/"/>
+    <id>https://wayww.cn/posts/23982c6e/</id>
+    <published>2019-10-14T11:50:32.000Z</published>
+    <updated>2021-07-02T04:02:20.105Z</updated>
+    
+    <content type="html"><![CDATA[<p>Linux下find命令在目录结构中搜索文件，并执行指定的操作。Linux下find命令提供了相当多的查找条件，功能很强大。由于find具有强大的功能，所以它的选项也很多，其中大部分选项都值得我们花时间来了解一下。即使系统中含有网络文件系统( NFS)，find命令在该文件系统中同样有效，只你具有相应的权限。 在运行一个非常消耗资源的find命令时，很多人都倾向于把它放在后台执行，因为遍历一个大的文件系统可能会花费很长的时间(这里是指30G字节以上的文件系统)</p><p>1.命令格式</p><p>find [path] [options]</p><p>2.命令功能</p><p>用于查找文件，常见于查找文件名，指定访问和修改时间内的文件等操作。</p><p>3.命令参数</p><p>pathname: 查找的目录路径，默认为当前目录。</p><p>-print： 将匹配到的文件输出到标准输出。</p><p>-exec： 对匹配到的文件执行该参数给出的shell命令： -exec ls -l {} \ ;</p><p>-ok: 作用同exec只是更安全的在执行每一条命令之前请求确认</p><p>4.命令选项：</p><p>-name 按照文件名查找文件，可使用shell匹配</p><p>-perm 按照文件权限查找文件 -perm 777</p><p>-type 查找指定的文件类型：</p><pre><code>b   块设备文件d   目录c   字符设备文件p   管道文件l   符号链接文件f   普通文件</code></pre><p>-size 查找指定文件大小 +1k 大于1k的文件 -1k 小于1k的文件</p><p>-amin n 最后n分钟访问的文件（距离当前时间n的第n分钟，下同）</p><p>-atime 最后n天访问的文件</p><p>-cmin 最后n分钟修改文件状态的文件（状态指文件是否修改，mode，ownership，链接数等）</p><p>-ctime 最后n天修改文件状态的文件</p><p>-mmin 最后n分钟修改文件数据的文件</p><p>-mtime n 最后n天那一天修改文件数据的文件</p><p>-mtime +n n 天前（不包含n天本身）被修改过的文件</p><p>-mtime -n n 天之内（包含n天本身）被修改过的文件</p><p>-user 按照文件属主查找</p><p>-nouser 查找无效属主文件</p><p>-nogroup 查找无效属组文件</p><p>-group 按照文件属组查找</p><p>-prune 指定不查找的目录</p><p>-maxdepth 在指定路径下查找文件的最深目录层次（紧接在路径后） 1 表示在指定目录下查找不递归</p><p>4.示例</p><p>查找指定大小的文件</p><pre><code>ww@debian:~/test$ ll -h总用量 8.0K-rwxr-xr-x 1 ww   ww   1.6K 9月  23 08:38 debian-start-rw-r--r-- 1 root root 1.0K 9月  23 10:08 kb-rw-r--r-- 1 root root    0 9月  23 10:06 ssww@debian:~/test$ find /home/ww/test/ -size +1k/home/ww/test//home/ww/test/debian-startww@debian:~/test$ find /home/ww/test/ -size -1k/home/ww/test/ssww@debian:~/test$ find /home/ww/test/ -size 1k/home/ww/test/kb</code></pre><p>匹配包含特定字符文件名的文件，并且递归目录查询</p><pre><code>root@debian:~# ll /etc/mysql/总用量 24drwxr-xr-x 2 root root 4096 9月  15 12:50 conf.d-rw------- 1 root root  277 9月  17 13:13 debian.cnf-rwxr-xr-x 1 root root 1620 8月   4 02:44 debian-start-rw-r--r-- 1 root root  869 8月   4 02:44 mariadb.cnfdrwxr-xr-x 2 root root 4096 9月  17 13:21 mariadb.conf.dlrwxrwxrwx 1 root root   24 9月  15 12:50 my.cnf -&gt; /etc/alternatives/my.cnf-rw-r--r-- 1 root root  839 8月   3  2016 my.cnf.fallbackroot@debian:~# find /etc/mysql/ -name &quot;*cnf*&quot; -type f -exec ls -l &#123;&#125; \;-rw-r--r-- 1 root root 55 8月   3  2016 /etc/mysql/conf.d/mysqldump.cnf-rw-r--r-- 1 root root 8 8月   3  2016 /etc/mysql/conf.d/mysql.cnf-rw-r--r-- 1 root root 336 8月   4 02:44 /etc/mysql/mariadb.conf.d/50-mysql-clients.cnf-rw-r--r-- 1 root root 3904 9月  17 13:21 /etc/mysql/mariadb.conf.d/50-server.cnf-rw-r--r-- 1 root root 733 8月   4 02:44 /etc/mysql/mariadb.conf.d/50-client.cnf-rw-r--r-- 1 root root 1032 8月   4 02:44 /etc/mysql/mariadb.conf.d/50-mysqld_safe.cnf-rw-r--r-- 1 root root 839 8月   3  2016 /etc/mysql/my.cnf.fallback-rw-r--r-- 1 root root 869 8月   4 02:44 /etc/mysql/mariadb.cnf-rw------- 1 root root 277 9月  17 13:13 /etc/mysql/debian.cn</code></pre><p>只在指定目录下查找不递归</p><pre><code>root@debian:~# find /etc/mysql/ -maxdepth 1 -name &quot;*cnf*&quot; -type f -exec ls -l &#123;&#125; \;-rw-r--r-- 1 root root 839 8月   3  2016 /etc/mysql/my.cnf.fallback-rw-r--r-- 1 root root 869 8月   4 02:44 /etc/mysql/mariadb.cnf-rw------- 1 root root 277 9月  17 13:13 /etc/mysql/debian.cnf</code></pre><p>查找俩天前创建的文件并询问是否删除</p><pre><code>root@debian:~# ll /var/log/mysql/总用量 16-rw-r----- 1 mysql adm 1892 9月  23 08:13 error.log-rw-r----- 1 mysql adm 1136 9月  22 23:07 error.log.1.gz-rw-r----- 1 mysql adm 1572 9月  20 14:57 error.log.2.gz-rw-rw---- 1 mysql adm 1598 9月  19 17:09 error.log.3.gzroot@debian:~# date2019年 09月 23日 星期一 10:58:43 CSTroot@debian:~# find /var/log/mysql/ -mtime +3 -ok rm &#123;&#125; \;root@debian:~# find /var/log/mysql/ -mtime +2 -ok rm &#123;&#125; \;&lt; rm ... /var/log/mysql/error.log.3.gz &gt; ? y</code></pre>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Linux下find命令在目录结构中搜索文件，并执行指定的操作。Linux下find命令提供了相当多的查找条件，功能很强大。由于find具有强大的功能，所以它的选项也很多，其中大部分选项都值得我们花时间来了解一下。即使系统中含有网络文件系统( NFS)，find命令在该文件</summary>
+      
+    
+    
+    
+    <category term="Command" scheme="https://wayww.cn/categories/Command/"/>
+    
+    
+    <category term="Linux" scheme="https://wayww.cn/tags/Linux/"/>
+    
+    <category term="Command" scheme="https://wayww.cn/tags/Command/"/>
+    
+  </entry>
+  
+</feed>

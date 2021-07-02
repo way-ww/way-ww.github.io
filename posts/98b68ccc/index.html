@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ubuntu18.04 搭建 nextcloud | 那个人</title><meta name="keywords" content="Linux"><meta name="author" content="wayww"><meta name="copyright" content="wayww"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="nextcloud 是目前开源社区最火的云项目，是个人云存储最理想的选择 手中正好有一部媳妇淘汰的小米MAX（骁龙650 + 32G + 4850mAh）电池性能任然很好，开 WiFi 跑 ubuntu 大概可用六天，于是开始了手动搭建私有云盘 材料：  MI MAX （Root + MIUI10.2） linuxdeploy（安卓跑linux的软件需要完全root） busybox （linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu18.04 搭建 nextcloud">
+<meta property="og:url" content="https://wayww.cn/posts/98b68ccc/index.html">
+<meta property="og:site_name" content="那个人">
+<meta property="og:description" content="nextcloud 是目前开源社区最火的云项目，是个人云存储最理想的选择 手中正好有一部媳妇淘汰的小米MAX（骁龙650 + 32G + 4850mAh）电池性能任然很好，开 WiFi 跑 ubuntu 大概可用六天，于是开始了手动搭建私有云盘 材料：  MI MAX （Root + MIUI10.2） linuxdeploy（安卓跑linux的软件需要完全root） busybox （linux">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wayww.cn/img/c8.jpg">
+<meta property="article:published_time" content="2019-10-14T11:50:32.000Z">
+<meta property="article:modified_time" content="2021-07-02T04:02:20.105Z">
+<meta property="article:author" content="wayww">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wayww.cn/img/c8.jpg"><link rel="shortcut icon" href="/img/linux.png"><link rel="canonical" href="https://wayww.cn/posts/98b68ccc/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-5320847130203407',
+  enable_page_level_ads: 'true'
+});</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-07-02 04:02:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="那个人" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><img class="load-image" src="/img/loadimg.gif" alt=""/></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/c8.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">那个人</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">Ubuntu18.04 搭建 nextcloud</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-02T04:02:20.105Z" title="更新于 2021-07-02 04:02:20">2021-07-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>nextcloud 是目前开源社区最火的云项目，是个人云存储最理想的选择</p>
+<p>手中正好有一部媳妇淘汰的小米MAX（骁龙650 + 32G + 4850mAh）电池性能任然很好，开 WiFi 跑 ubuntu 大概可用六天，于是开始了手动搭建私有云盘</p>
+<p>材料：</p>
+<ul>
+<li>MI MAX （Root + MIUI10.2）</li>
+<li>linuxdeploy（安卓跑linux的软件需要完全root）</li>
+<li>busybox （linuxdeploy支持包）</li>
+<li>ubuntu18.04 （armhf）</li>
+<li>nextcloud16.03</li>
+<li>php 7.2.6</li>
+<li>apache2</li>
+<li>mariadb 10.1</li>
+</ul>
+<p>本文仅介绍 ubuntu18.04 下搭建 nextcloud 16.03 全过程，不涉及手机 Root 及 ubuntu 的安装，有兴趣可自行了解。</p>
+<p>第一步：安装 Apache2</p>
+<p>nextcloud 需要一个 web 服务器，这里选用的 web 服务器是 Apache2。通过运行以下命令安装：</p>
+<p>sudo apt-get update</p>
+<p>sudo apt-get install apache2</p>
+<p>安装 Apache2 后，运行以下命令禁用目录列表。</p>
+<p>sudo sed -i “s/Options Indexes FollowSymLinks/Options FollowSymLinks/“ /etc/apache2/apache2.conf</p>
+<p>启动 Apache2 服务</p>
+<p>sudo systemctl restart apache2</p>
+<p>第二步：安装 mariadb</p>
+<p>NextCloud还需要一个数据库服务器…… MariaDB数据库服务器是一个很好的选择。运行以下命令安装</p>
+<p>sudo apt install mariadb-server mariadb-client</p>
+<p>启动 mariadb 服务</p>
+<p>sudo systemctl rsetart mysql</p>
+<p>之后运行以下命令为 mariadb 设置安全模块</p>
+<p>sudo mysql_secure_installation</p>
+<p>出现提示是，按照以下输入。</p>
+<p>Enter current password for root (enter for none): Enter</p>
+<p>Set root password? [Y/n]:Y</p>
+<p>New password: Enter password</p>
+<p>Re-enter new password: Repeat password</p>
+<p>Remove anonymous users? [Y/n]: Y</p>
+<p>Disallow root login remotely? [Y/n]: Y</p>
+<p>Remove test database and access to it? [Y/n]: Y</p>
+<p>Reload privilege tables now? [Y/n]: Y</p>
+<p>设置远程访问</p>
+<p>sudo vim /etc/mysql/my.cnf (不同版本位置不完全相同，亦可能为/etc/mysql/mariadb.conf.d/50-server.cnf)</p>
+<p>删除 bind-address = 127.0.0.1 这一行</p>
+<p>保存退出</p>
+<p>重启 mariadb 服务</p>
+<p>sudo systemctl restart mysql</p>
+<p>第三步：安装 PHP 及相关模块</p>
+<p>sudo apt install php7.2 libapache2-mod-php7.2 php7.2-common php7.2-mbstring php7.2-xmlrpc php7.2-soap php7.2-apcu php7.2-smbclient php7.2-ldap php7.2-redis php7.2-gd php7.2-xml php7.2-intl php7.2-json php7.2-imagick php7.2-mysql php7.2-cli php7.2-mcrypt php7.2-ldap php7.2-zip php7.2-curl</p>
+<p>** sudo apt install php7.2***</p>
+<p>安装 php 后，运行以下命令打开 FPM PHP 默认文件</p>
+<p>sudo vim /etc/php7.2/apache2/php.ini</p>
+<p>修改以下内容并保存</p>
+<p>file_uploads = On</p>
+<p>allow_url_fopen = On</p>
+<p>memory_limit = 256M</p>
+<p>upload_max_filesize = 100M</p>
+<p>display_errors = Off</p>
+<p>第四步：创建 nextcloud 数据库</p>
+<p>登录 mariadb 服务器</p>
+<p>sudo mysql -uroot -p</p>
+<p>创建 nextcloud 数据库</p>
+<p>create database nextcloud;</p>
+<p>创建 nextclouduser 用户</p>
+<p>CREATE USER ‘nextclouduser’@’localhost’ IDENTIFIED BY ‘new_password_here’;</p>
+<p>赋予新建的用户对数据库完全访问权限</p>
+<p>GRANT ALL ON nextcloud.* TO ‘nextclouduser’@’localhost’ IDENTIFIED BY ‘user_password_here’ WITH GRANT OPTION;</p>
+<p>最后保存退出</p>
+<p>FLUSH PRIVILEGES;</p>
+<p>exit;</p>
+<p>第五步：下载 nextcloud16.03</p>
+<p>wget <a target="_blank" rel="noopener external nofollow noreferrer" href="https://download.nextcloud.com/server/releases/nextcloud-16.0.3.zip">https://download.nextcloud.com/server/releases/nextcloud-16.0.3.zip</a></p>
+<p>解压后移动到 Apache2 根目录下</p>
+<p>unzip nextcloud-16.0.3.zip;sudo mv nextcloud /var/www/html/nextcloud</p>
+<p>为 nextcloud 目录设置正确的权限</p>
+<p>sudo chown -R www-data:www-data /var/www/html/nextcloud/</p>
+<p>sudo chmod -R 755 /var/www/html/nextcloud/</p>
+<p>第六步：配置 Apache2</p>
+<p>为 nextcloud 配置 Apache2 站点配置文件。此文件用于控制用户访问 nextcloud 内容的方式。</p>
+<p>sudo vim /etc/apache2/sites-avaiable/nextcloud.conf</p>
+<p>将以下内容粘贴保存到 nextcloud.conf 中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">     ServerAdmin admin@example.com</span><br><span class="line">     DocumentRoot &#x2F;var&#x2F;www&#x2F;html&#x2F;nextcloud&#x2F;</span><br><span class="line">     ServerName example.com</span><br><span class="line">     ServerAlias www.example.com</span><br><span class="line">     Alias &#x2F;nextcloud &quot;&#x2F;var&#x2F;www&#x2F;html&#x2F;nextcloud&#x2F;&quot;</span><br><span class="line">     &lt;Directory &#x2F;var&#x2F;www&#x2F;html&#x2F;nextcloud&#x2F;&gt;</span><br><span class="line">        Options +FollowSymlinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">          &lt;IfModule mod_dav.c&gt;</span><br><span class="line">            Dav off</span><br><span class="line">          &lt;&#x2F;IfModule&gt;</span><br><span class="line">        SetEnv HOME &#x2F;var&#x2F;www&#x2F;html&#x2F;nextcloud</span><br><span class="line">        SetEnv HTTP_HOME &#x2F;var&#x2F;www&#x2F;html&#x2F;nextcloud</span><br><span class="line">     &lt;&#x2F;Directory&gt;</span><br><span class="line">     ErrorLog $&#123;APACHE_LOG_DIR&#125;&#x2F;error.log</span><br><span class="line">     CustomLog $&#123;APACHE_LOG_DIR&#125;&#x2F;access.log combined</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>保存后退出</p>
+<p>链接子目录配置文件</p>
+<p>sudo ln -s /etc/apache2/sites-available/nextcloud.conf /etc/apache2/sites-enabled/nextcloud.conf</p>
+<p>更改网站默认目录</p>
+<p>sudo vim /etc/apache2/sites-available/000-default.conf</p>
+<p>修改以下内容</p>
+<p>DocumentRoot /var/www/html/nextcloud</p>
+<p>添加模块</p>
+<p>sudo a2ensite nextcloud.conf</p>
+<p>sudo a2enmod rewrite</p>
+<p>sudo a2enmod headers</p>
+<p>sudo a2enmod env</p>
+<p>sudo a2enmod dir</p>
+<p>sudo a2enmod mime<br>重启 Apache2</p>
+<p>sudo systemctl restart apache2</p>
+<p>第七步：初始化 nextcloud<br>浏览器输入</p>
+<p>http://服务器IP</p>
+<p>可以访问到 nextcloud 设置页面。使用刚才创建的信息链接到数据库即可完成。</p>
+<p>稍等俩分钟后安装完成</p>
+<p>finish</p>
+<p>Now all the well !</p>
+<p>任务完成 ！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">wayww</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wayww.cn/posts/98b68ccc/">https://wayww.cn/posts/98b68ccc/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wayww.cn" target="_blank">那个人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="/img/c8.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/wechat.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/57e3f167/"><img class="prev-cover" data-lazy-src="/img/c7.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ssh 访问控制</div></div></a></div><div class="next-post pull-right"><a href="/posts/f7d05c2a/"><img class="next-cover" data-lazy-src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Ubuntu 更换中科大 arm 源</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/0/" title="k8s 实践"><img class="cover" data-lazy-src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">k8s 实践</div></div></a></div><div><a href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img class="cover" data-lazy-src="/img/c14.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">linuxdeploy无法启动MySQL</div></div></a></div><div><a href="/posts/bda00998/" title="Centos7 安装 vsftp"><img class="cover" data-lazy-src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Centos7 安装 vsftp</div></div></a></div><div><a href="/posts/a431c5ec/" title="Centos7 配置阿里 yum 源"><img class="cover" data-lazy-src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Centos7 配置阿里 yum 源</div></div></a></div><div><a href="/posts/92cbaf29/" title="Hexo 部署报错 permission denied"><img class="cover" data-lazy-src="/img/c4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Hexo 部署报错 permission denied</div></div></a></div><div><a href="/posts/f6892ceb/" title="Nginx 安装记录"><img class="cover" data-lazy-src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Nginx 安装记录</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Livere</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC80ODMyNi8yNDgyMA=="></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">wayww</div><div class="author-info__description">人活着就不能安于现状</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/way-ww"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/way-ww" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:wangwanway@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/img/alipay.jpg" target="_blank" title="支付宝"><i class="fab fa-alipay"></i></a><a class="social-icon" href="/img/wechat.png" target="_blank" title="微信"><i class="fab fa-weixin"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">坚持每天进步一点点</div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img data-lazy-src="/img/c14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linuxdeploy无法启动MySQL"/></a><div class="content"><a class="title" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL">linuxdeploy无法启动MySQL</a><time datetime="2019-10-14T12:07:32.000Z" title="发表于 2019-10-14 12:07:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/0/" title="k8s 实践"><img data-lazy-src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s 实践"/></a><div class="content"><a class="title" href="/posts/0/" title="k8s 实践">k8s 实践</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bda00998/" title="Centos7 安装 vsftp"><img data-lazy-src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Centos7 安装 vsftp"/></a><div class="content"><a class="title" href="/posts/bda00998/" title="Centos7 安装 vsftp">Centos7 安装 vsftp</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/c8.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2021 By wayww</div><div class="footer_custom_text">想要变强啊，想要像那个人一样，绝对不只是想象！</div><img src="/img/icp.png" align="center" height="18" width="18" style="display:inline-block">
+<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34019102000925" rel="external nofollow noreferrer"  target="_blank">皖公网安备 34019102000925号</a>
+<a href="https://beian.miit.gov.cn/#/Integrated/index" rel="external nofollow noreferrer"  target="_blank">皖ICP备2021008794号</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})
+setTimeout(function(){preloader.endLoading();}, 3000);</script></div><div class="js-pjax"><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk({
+      clientID: '59098f743354a81c3a4f',
+      clientSecret: '03e355c9ce993f8da44408a4fc794fa29881da69',
+      repo: 'comment',
+      owner: 'way-ww',
+      admin: ['way-ww'],
+      id: 'dc66c2b10d699870859cbed9928df555',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    })
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    $.getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js', initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Livere' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>

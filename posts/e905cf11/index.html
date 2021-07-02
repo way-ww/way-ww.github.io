@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>k8s 安装记录 | 那个人</title><meta name="keywords" content="Linux,k8s"><meta name="author" content="wayww"><meta name="copyright" content="wayww"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="一、 环境说明 虚拟机 CentOS7.6 三台  RAM 2G  CPU 2    二、 安装前准备（此步骤三台机器都需要执行）2.1  升级内核至 4.44 或以上123rpm -Uvh http:&#x2F;&#x2F;www.elrepo.org&#x2F;elrepo-release-7.0-3.el7.elrepo.noarch.rpmyum --enablerepo&#x3D;elr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s 安装记录">
+<meta property="og:url" content="https://wayww.cn/posts/e905cf11/index.html">
+<meta property="og:site_name" content="那个人">
+<meta property="og:description" content="一、 环境说明 虚拟机 CentOS7.6 三台  RAM 2G  CPU 2    二、 安装前准备（此步骤三台机器都需要执行）2.1  升级内核至 4.44 或以上123rpm -Uvh http:&#x2F;&#x2F;www.elrepo.org&#x2F;elrepo-release-7.0-3.el7.elrepo.noarch.rpmyum --enablerepo&#x3D;elr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wayww.cn/img/c8.jpg">
+<meta property="article:published_time" content="2019-10-14T11:50:32.000Z">
+<meta property="article:modified_time" content="2021-07-02T04:02:20.105Z">
+<meta property="article:author" content="wayww">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wayww.cn/img/c8.jpg"><link rel="shortcut icon" href="/img/linux.png"><link rel="canonical" href="https://wayww.cn/posts/e905cf11/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-5320847130203407',
+  enable_page_level_ads: 'true'
+});</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-07-02 04:02:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="那个人" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><img class="load-image" src="/img/loadimg.gif" alt=""/></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/c8.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">那个人</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">k8s 安装记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-02T04:02:20.105Z" title="更新于 2021-07-02 04:02:20">2021-07-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Kubernetes/">Kubernetes</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">990</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、-环境说明"><a href="#一、-环境说明" class="headerlink" title="一、 环境说明"></a>一、 环境说明</h2><ul>
+<li><p>虚拟机 CentOS7.6 三台</p>
+</li>
+<li><p>RAM 2G</p>
+</li>
+<li><p>CPU 2</p>
+</li>
+</ul>
+<hr>
+<h2 id="二、-安装前准备（此步骤三台机器都需要执行）"><a href="#二、-安装前准备（此步骤三台机器都需要执行）" class="headerlink" title="二、 安装前准备（此步骤三台机器都需要执行）"></a>二、 安装前准备（此步骤三台机器都需要执行）</h2><h4 id="2-1-升级内核至-4-44-或以上"><a href="#2-1-升级内核至-4-44-或以上" class="headerlink" title="2.1  升级内核至 4.44 或以上"></a>2.1  升级内核至 4.44 或以上</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh http:&#x2F;&#x2F;www.elrepo.org&#x2F;elrepo-release-7.0-3.el7.elrepo.noarch.rpm</span><br><span class="line">yum --enablerepo&#x3D;elrepo-kernel install -y kernel-lt</span><br><span class="line">grub2-set-default &quot;CentOS Linux (4.4.215-1.el7.elrepo.x86_64) 7 (Core)&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-关闭-firewalld-和-selinux"><a href="#2-2-关闭-firewalld-和-selinux" class="headerlink" title="2.2 关闭 firewalld 和 selinux"></a>2.2 关闭 firewalld 和 selinux</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld &amp;&amp; systemctl disable firewalld</span><br><span class="line"></span><br><span class="line">setenforce 0</span><br><span class="line"></span><br><span class="line">sed -i &#39;s&#x2F;^SELINUX&#x3D;enforcing$&#x2F;SELINUX&#x3D;permissive&#x2F;&#39; &#x2F;etc&#x2F;selinux&#x2F;config</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-开启数据包转发"><a href="#2-3-开启数据包转发" class="headerlink" title="2.3 开启数据包转发"></a>2.3 开启数据包转发</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  &#x2F;etc&#x2F;sysctl.d&#x2F;k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables &#x3D; 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables &#x3D; 1</span><br><span class="line">net.ipv4.ip_forward &#x3D; 1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-关闭交换分区"><a href="#2-4-关闭交换分区" class="headerlink" title="2.4 关闭交换分区"></a>2.4 关闭交换分区</h4><blockquote>
+<p>直接修改文件 /etc/fstab 注释掉 swap 分区</p>
+</blockquote>
+<h4 id="2-5-配置主机名-分别命名三台机器主机名为-master-node1-和-node2"><a href="#2-5-配置主机名-分别命名三台机器主机名为-master-node1-和-node2" class="headerlink" title="2.5 配置主机名 (分别命名三台机器主机名为 master node1 和 node2)"></a>2.5 配置主机名 (分别命名三台机器主机名为 master node1 和 node2)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname master</span><br><span class="line">hostnamectl set-hostname node1</span><br><span class="line">hostnamectl set-hostname node2</span><br></pre></td></tr></table></figure>
+<h4 id="2-6-修改-hosts-文件"><a href="#2-6-修改-hosts-文件" class="headerlink" title="2.6 修改 hosts 文件"></a>2.6 修改 hosts 文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; &#x2F;etc&#x2F;hosts &lt;&lt; EOF</span><br><span class="line">192.168.56.116    master</span><br><span class="line">192.168.56.117    node1</span><br><span class="line">192.168.56.118    node2</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h4 id="2-7-重启"><a href="#2-7-重启" class="headerlink" title="2.7 重启"></a>2.7 重启</h4><hr>
+<h2 id="三、-安装-Docker-此步骤三台机器都要执行"><a href="#三、-安装-Docker-此步骤三台机器都要执行" class="headerlink" title="三、 安装 Docker (此步骤三台机器都要执行)"></a>三、 安装 Docker (此步骤三台机器都要执行)</h2><h4 id="3-1-安装依赖软件"><a href="#3-1-安装依赖软件" class="headerlink" title="3.1 安装依赖软件"></a>3.1 安装依赖软件</h4><blockquote>
+<p><code>yum -y install yum-utils device-mapper-persistent-data lvm2</code></p>
+</blockquote>
+<h4 id="3-2-添加-docker-的阿里镜像源"><a href="#3-2-添加-docker-的阿里镜像源" class="headerlink" title="3.2 添加 docker 的阿里镜像源"></a>3.2 添加 docker 的阿里镜像源</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span><br><span class="line"></span><br><span class="line">yum-config-manager --enable docker-ce.repo</span><br><span class="line"></span><br><span class="line">yum clean all &amp;&amp; yum -y makecache</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-安装-docker"><a href="#3-3-安装-docker" class="headerlink" title="3.3 安装 docker"></a>3.3 安装 docker</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce.x86_64  --showduplicates |sort -r</span><br><span class="line"></span><br><span class="line">yum install docker-ce-18.09.3.ce-3.el7 -y</span><br><span class="line"></span><br><span class="line">systemctl start docker &amp;&amp; systemctl enable docker</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-配置-docker-镜像加速器"><a href="#3-4-配置-docker-镜像加速器" class="headerlink" title="3.4 配置 docker 镜像加速器"></a>3.4 配置 docker 镜像加速器</h4><blockquote>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">注册阿里加速链接</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tee &#x2F;etc&#x2F;docker&#x2F;daemon.json &lt;&lt;-&#39;EOF&#39;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;635f8iwu.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-修改-Cgroup-Driver"><a href="#3-5-修改-Cgroup-Driver" class="headerlink" title="3.5 修改 Cgroup Driver"></a>3.5 修改 Cgroup Driver</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tee &#x2F;etc&#x2F;docker&#x2F;daemon.json &lt;&lt;-&#39;EOF&#39;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;635f8iwu.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver&#x3D;systemd&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-6-重新加载-docker"><a href="#3-6-重新加载-docker" class="headerlink" title="3.6 重新加载 docker"></a>3.6 重新加载 docker</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="四、-安装-kubernetes-此步骤三台机器都需要执行"><a href="#四、-安装-kubernetes-此步骤三台机器都需要执行" class="headerlink" title="四、 安装 kubernetes (此步骤三台机器都需要执行)"></a>四、 安装 kubernetes (此步骤三台机器都需要执行)</h2><h4 id="4-1-时间同步"><a href="#4-1-时间同步" class="headerlink" title="4.1 时间同步"></a>4.1 时间同步</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate -u cn.ntp.org.cn</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-添加-kubernetes-的阿里镜像源"><a href="#4-2-添加-kubernetes-的阿里镜像源" class="headerlink" title="4.2 添加 kubernetes 的阿里镜像源"></a>4.2 添加 kubernetes 的阿里镜像源</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; &#x2F;etc&#x2F;yum.repos.d&#x2F;kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name&#x3D;Kubernetes</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;repos&#x2F;kubernetes-el7-x86_64&#x2F;</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">repo_gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;yum-key.gpg https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;rpm-package-key.gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-安装-kubelet、-kubeadm、-kubectl-1-17-4是目前最新稳定版"><a href="#4-3-安装-kubelet、-kubeadm、-kubectl-1-17-4是目前最新稳定版" class="headerlink" title="4.3 安装 kubelet、 kubeadm、 kubectl  (1.17.4是目前最新稳定版)"></a>4.3 安装 kubelet、 kubeadm、 kubectl  (1.17.4是目前最新稳定版)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yum makecache fast -y</span><br><span class="line"></span><br><span class="line">yum list kubelet --showduplicates | sort -r </span><br><span class="line"></span><br><span class="line">yum install -y kubelet-1.17.3 kubeadm-1.17.3 kubectl-1.17.3</span><br><span class="line"></span><br><span class="line">systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-命令补全"><a href="#4-4-命令补全" class="headerlink" title="4.4 命令补全"></a>4.4 命令补全</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~&#x2F;.bash_profile</span><br><span class="line">source .bash_profile </span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="五、-master-部署-此步骤仅在-master-上执行"><a href="#五、-master-部署-此步骤仅在-master-上执行" class="headerlink" title="五、 master 部署 (此步骤仅在 master 上执行)"></a>五、 master 部署 (此步骤仅在 master 上执行)</h2><h4 id="5-1-初始化集群"><a href="#5-1-初始化集群" class="headerlink" title="5.1 初始化集群"></a>5.1 初始化集群</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init \</span><br><span class="line">  --apiserver-advertise-address&#x3D;192.168.56.116 \</span><br><span class="line">  --image-repository registry.aliyuncs.com&#x2F;google_containers \</span><br><span class="line">  --kubernetes-version v1.17.3 \</span><br><span class="line">  --service-cidr&#x3D;10.1.0.0&#x2F;16 \</span><br><span class="line">  --pod-network-cidr&#x3D;10.244.0.0&#x2F;16</span><br></pre></td></tr></table></figure>
+<p>注意：记录 kubeadm join 的输出</p>
+<h4 id="5-2-加载环境变量"><a href="#5-2-加载环境变量" class="headerlink" title="5.2 加载环境变量"></a>5.2 加载环境变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;export KUBECONFIG&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;admin.conf&quot; &gt;&gt; ~&#x2F;.bash_profile</span><br><span class="line"></span><br><span class="line">source .bash_profile </span><br><span class="line"></span><br><span class="line">mkdir -p $HOME&#x2F;.kube</span><br><span class="line"></span><br><span class="line">cp -i &#x2F;etc&#x2F;kubernetes&#x2F;admin.conf $HOME&#x2F;.kube&#x2F;config</span><br><span class="line"></span><br><span class="line">chown $(id -u):$(id -g) $HOME&#x2F;.kube&#x2F;config</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-安装-pod-网络-flannel"><a href="#5-3-安装-pod-网络-flannel" class="headerlink" title="5.3 安装 pod 网络 flannel"></a>5.3 安装 pod 网络 flannel</h4><blockquote>
+<p>wget <a target="_blank" rel="noopener external nofollow noreferrer" href="https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml">https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</a></p>
+</blockquote>
+<blockquote>
+<p>因为墙的原因，所以将 kube-flannel.yml 文件中的 quay.io 全部替换为 quay-mirror.qiniu.com</p>
+</blockquote>
+<blockquote>
+<p>kubectl apply -f kube-flannel.yml</p>
+</blockquote>
+<hr>
+<h2 id="六、-加入-node-节点-在两台-node-机器上执行"><a href="#六、-加入-node-节点-在两台-node-机器上执行" class="headerlink" title="六、 加入 node 节点 (在两台 node 机器上执行)"></a>六、 加入 node 节点 (在两台 node 机器上执行)</h2><blockquote>
+<p>根据 5.1 中的记录使用 kubeadm join 分别在两台 node 上执行加入集群，例如：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.56.116:6443 --token 42w1zg.6ffi04kj88c1kesn \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:69453c78d7e1c8d1f576e4b08bff84be29fb91b5e0584c67bdf226b85ceb548d</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>等待执行成功即可。</p>
+</blockquote>
+<hr>
+<h4 id="附关于-token-相关内容："><a href="#附关于-token-相关内容：" class="headerlink" title="附关于 token 相关内容："></a>附关于 token 相关内容：</h4><ul>
+<li>可在 master 上查看 token</li>
+</ul>
+<blockquote>
+<p><code>kubeadm token list</code></p>
+</blockquote>
+<ul>
+<li>master 上生成新的 token</li>
+</ul>
+<blockquote>
+<p><code>kubeadm token create</code></p>
+</blockquote>
+<ul>
+<li>master 上生成新的杂凑值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -pubkey -in &#x2F;etc&#x2F;kubernetes&#x2F;pki&#x2F;ca.crt | openssl rsa -pubin -outform der 2&gt;&#x2F;dev&#x2F;null | \</span><br><span class="line">openssl dgst -sha256 -hex | sed &#39;s&#x2F;^.* &#x2F;&#x2F;&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>node 上使用新的 token 即可加入集群</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.56.116:6443 --token 1zl3he.fxgz2pvxa3qkwxln  --discovery-token-ca-cert-hash sha256:5f656ae26b5e7d4641a979cbfdffeb7845cc5962bbfcd1d5435f00a25c02ea50&#96;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">wayww</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://wayww.cn/posts/e905cf11/">https://wayww.cn/posts/e905cf11/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wayww.cn" target="_blank">那个人</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/Kubernetes/">Kubernetes</a></div><div class="post_share"><div class="social-share" data-image="/img/c8.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/wechat.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" data-lazy-src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/81544468/"><img class="prev-cover" data-lazy-src="/img/c7.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">RedHat7 配置 ipv6</div></div></a></div><div class="next-post pull-right"><a href="/posts/0/"><img class="next-cover" data-lazy-src="/img/c9.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">k8s 实践</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/0/" title="k8s 实践"><img class="cover" data-lazy-src="/img/c9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">k8s 实践</div></div></a></div><div><a href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img class="cover" data-lazy-src="/img/c14.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">linuxdeploy无法启动MySQL</div></div></a></div><div><a href="/posts/bda00998/" title="Centos7 安装 vsftp"><img class="cover" data-lazy-src="/img/c7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Centos7 安装 vsftp</div></div></a></div><div><a href="/posts/a431c5ec/" title="Centos7 配置阿里 yum 源"><img class="cover" data-lazy-src="/img/c8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Centos7 配置阿里 yum 源</div></div></a></div><div><a href="/posts/92cbaf29/" title="Hexo 部署报错 permission denied"><img class="cover" data-lazy-src="/img/c4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Hexo 部署报错 permission denied</div></div></a></div><div><a href="/posts/f6892ceb/" title="Nginx 安装记录"><img class="cover" data-lazy-src="/img/c12.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-10-14</div><div class="title">Nginx 安装记录</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Livere</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC80ODMyNi8yNDgyMA=="></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">wayww</div><div class="author-info__description">人活着就不能安于现状</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/way-ww"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/way-ww" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:wangwanway@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/img/alipay.jpg" target="_blank" title="支付宝"><i class="fab fa-alipay"></i></a><a class="social-icon" href="/img/wechat.png" target="_blank" title="微信"><i class="fab fa-weixin"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">坚持每天进步一点点</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E7%8E%AF%E5%A2%83%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">一、 环境说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E5%AE%89%E8%A3%85%E5%89%8D%E5%87%86%E5%A4%87%EF%BC%88%E6%AD%A4%E6%AD%A5%E9%AA%A4%E4%B8%89%E5%8F%B0%E6%9C%BA%E5%99%A8%E9%83%BD%E9%9C%80%E8%A6%81%E6%89%A7%E8%A1%8C%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">二、 安装前准备（此步骤三台机器都需要执行）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E8%87%B3-4-44-%E6%88%96%E4%BB%A5%E4%B8%8A"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1  升级内核至 4.44 或以上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E5%85%B3%E9%97%AD-firewalld-%E5%92%8C-selinux"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2 关闭 firewalld 和 selinux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E5%BC%80%E5%90%AF%E6%95%B0%E6%8D%AE%E5%8C%85%E8%BD%AC%E5%8F%91"><span class="toc-number">2.0.3.</span> <span class="toc-text">2.3 开启数据包转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%85%B3%E9%97%AD%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-number">2.0.4.</span> <span class="toc-text">2.4 关闭交换分区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D-%E5%88%86%E5%88%AB%E5%91%BD%E5%90%8D%E4%B8%89%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%B8%BA-master-node1-%E5%92%8C-node2"><span class="toc-number">2.0.5.</span> <span class="toc-text">2.5 配置主机名 (分别命名三台机器主机名为 master node1 和 node2)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-%E4%BF%AE%E6%94%B9-hosts-%E6%96%87%E4%BB%B6"><span class="toc-number">2.0.6.</span> <span class="toc-text">2.6 修改 hosts 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-7-%E9%87%8D%E5%90%AF"><span class="toc-number">2.0.7.</span> <span class="toc-text">2.7 重启</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%AE%89%E8%A3%85-Docker-%E6%AD%A4%E6%AD%A5%E9%AA%A4%E4%B8%89%E5%8F%B0%E6%9C%BA%E5%99%A8%E9%83%BD%E8%A6%81%E6%89%A7%E8%A1%8C"><span class="toc-number">3.</span> <span class="toc-text">三、 安装 Docker (此步骤三台机器都要执行)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E8%BD%AF%E4%BB%B6"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1 安装依赖软件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E6%B7%BB%E5%8A%A0-docker-%E7%9A%84%E9%98%BF%E9%87%8C%E9%95%9C%E5%83%8F%E6%BA%90"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2 添加 docker 的阿里镜像源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E5%AE%89%E8%A3%85-docker"><span class="toc-number">3.0.3.</span> <span class="toc-text">3.3 安装 docker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E9%85%8D%E7%BD%AE-docker-%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%E5%99%A8"><span class="toc-number">3.0.4.</span> <span class="toc-text">3.4 配置 docker 镜像加速器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E4%BF%AE%E6%94%B9-Cgroup-Driver"><span class="toc-number">3.0.5.</span> <span class="toc-text">3.5 修改 Cgroup Driver</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-6-%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD-docker"><span class="toc-number">3.0.6.</span> <span class="toc-text">3.6 重新加载 docker</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E5%AE%89%E8%A3%85-kubernetes-%E6%AD%A4%E6%AD%A5%E9%AA%A4%E4%B8%89%E5%8F%B0%E6%9C%BA%E5%99%A8%E9%83%BD%E9%9C%80%E8%A6%81%E6%89%A7%E8%A1%8C"><span class="toc-number">4.</span> <span class="toc-text">四、 安装 kubernetes (此步骤三台机器都需要执行)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="toc-number">4.0.1.</span> <span class="toc-text">4.1 时间同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E6%B7%BB%E5%8A%A0-kubernetes-%E7%9A%84%E9%98%BF%E9%87%8C%E9%95%9C%E5%83%8F%E6%BA%90"><span class="toc-number">4.0.2.</span> <span class="toc-text">4.2 添加 kubernetes 的阿里镜像源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E5%AE%89%E8%A3%85-kubelet%E3%80%81-kubeadm%E3%80%81-kubectl-1-17-4%E6%98%AF%E7%9B%AE%E5%89%8D%E6%9C%80%E6%96%B0%E7%A8%B3%E5%AE%9A%E7%89%88"><span class="toc-number">4.0.3.</span> <span class="toc-text">4.3 安装 kubelet、 kubeadm、 kubectl  (1.17.4是目前最新稳定版)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%A8"><span class="toc-number">4.0.4.</span> <span class="toc-text">4.4 命令补全</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81-master-%E9%83%A8%E7%BD%B2-%E6%AD%A4%E6%AD%A5%E9%AA%A4%E4%BB%85%E5%9C%A8-master-%E4%B8%8A%E6%89%A7%E8%A1%8C"><span class="toc-number">5.</span> <span class="toc-text">五、 master 部署 (此步骤仅在 master 上执行)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%9B%86%E7%BE%A4"><span class="toc-number">5.0.1.</span> <span class="toc-text">5.1 初始化集群</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E5%8A%A0%E8%BD%BD%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">5.0.2.</span> <span class="toc-text">5.2 加载环境变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E5%AE%89%E8%A3%85-pod-%E7%BD%91%E7%BB%9C-flannel"><span class="toc-number">5.0.3.</span> <span class="toc-text">5.3 安装 pod 网络 flannel</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81-%E5%8A%A0%E5%85%A5-node-%E8%8A%82%E7%82%B9-%E5%9C%A8%E4%B8%A4%E5%8F%B0-node-%E6%9C%BA%E5%99%A8%E4%B8%8A%E6%89%A7%E8%A1%8C"><span class="toc-number">6.</span> <span class="toc-text">六、 加入 node 节点 (在两台 node 机器上执行)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%84%E5%85%B3%E4%BA%8E-token-%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">6.0.1.</span> <span class="toc-text">附关于 token 相关内容：</span></a></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img data-lazy-src="/img/c14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linuxdeploy无法启动MySQL"/></a><div class="content"><a class="title" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL">linuxdeploy无法启动MySQL</a><time datetime="2019-10-14T12:07:32.000Z" title="发表于 2019-10-14 12:07:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/0/" title="k8s 实践"><img data-lazy-src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s 实践"/></a><div class="content"><a class="title" href="/posts/0/" title="k8s 实践">k8s 实践</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bda00998/" title="Centos7 安装 vsftp"><img data-lazy-src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Centos7 安装 vsftp"/></a><div class="content"><a class="title" href="/posts/bda00998/" title="Centos7 安装 vsftp">Centos7 安装 vsftp</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/c8.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2021 By wayww</div><div class="footer_custom_text">想要变强啊，想要像那个人一样，绝对不只是想象！</div><img src="/img/icp.png" align="center" height="18" width="18" style="display:inline-block">
+<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34019102000925" rel="external nofollow noreferrer"  target="_blank">皖公网安备 34019102000925号</a>
+<a href="https://beian.miit.gov.cn/#/Integrated/index" rel="external nofollow noreferrer"  target="_blank">皖ICP备2021008794号</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})
+setTimeout(function(){preloader.endLoading();}, 3000);</script></div><div class="js-pjax"><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk({
+      clientID: '59098f743354a81c3a4f',
+      clientSecret: '03e355c9ce993f8da44408a4fc794fa29881da69',
+      repo: 'comment',
+      owner: 'way-ww',
+      admin: ['way-ww'],
+      id: '1cebd231ed4c0b1a75d72ada480c886e',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    })
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    $.getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js', initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Livere' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>

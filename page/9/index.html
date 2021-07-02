@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>那个人</title><meta name="keywords" content="linux,way-ww,docker,k8s,centos"><meta name="author" content="wayww"><meta name="copyright" content="wayww"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="人活着就不能安于现状">
+<meta property="og:type" content="website">
+<meta property="og:title" content="那个人">
+<meta property="og:url" content="https://wayww.cn/page/9/index.html">
+<meta property="og:site_name" content="那个人">
+<meta property="og:description" content="人活着就不能安于现状">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wayww.cn/img/head.jpg">
+<meta property="article:author" content="wayww">
+<meta property="article:tag" content="linux,way-ww,docker,k8s,centos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wayww.cn/img/head.jpg"><link rel="shortcut icon" href="/img/linux.png"><link rel="canonical" href="https://wayww.cn/page/9/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-5320847130203407',
+  enable_page_level_ads: 'true'
+});</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-07-02 04:02:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="那个人" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><img class="load-image" src="/img/loadimg.gif" alt=""/></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/bb.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">那个人</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 爱月</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">那个人</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/way-ww" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:wangwanway@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/img/alipay.jpg" target="_blank" title="支付宝"><i class="fab fa-alipay"></i></a><a class="social-icon" href="/img/wechat.png" target="_blank" title="微信"><i class="fab fa-weixin"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/e9980a5f/" title="iscsi 后端存储配置">     <img class="post_bg" data-lazy-src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="iscsi 后端存储配置"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/e9980a5f/" title="iscsi 后端存储配置">iscsi 后端存储配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-10-12T11:50:32.000Z" title="发表于 2019-10-12 11:50:32">2019-10-12</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/RHCE/">RHCE</a></span></div><div class="content">配置 iscsi    配置 system1 提供 iSCSI服务，磁盘名为 iqn.2019-12.com.example:system1，并符合下列要求:
+    服务端口为 3260；
+    使用 iscsi_store 作其后端卷，其大小为 3GiB 访问；
+    此服务只能被 system2.example.com 访问。
+
+    配置system2使其能连接 system1上提供的 iqn.2019-12.com.example:system1，并符合以下要求:
+    iscsi 设备在系统启动的期间自动加载；
+    块设备 iSCSI 上包含一个大小为 2100MiB 的分区，并格式化为 ext4 文件系统,此分区挂载在/mnt/data 上，同时在系统启动的期间自动挂载。
+
+服务端（system1）
+安装软件包
+  &gt;# yum -y install targetcli
+
+准备磁盘空间
+  &gt;# fdisk /dev/vda
+  n
+  p
+  1
+  2048
+  +3100M
+  w
+
+更新分区信息
+  &gt;# partprobe /dev ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/dfdbd473/" title="web 服务器访问控制">     <img class="post_bg" data-lazy-src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="web 服务器访问控制"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/dfdbd473/" title="web 服务器访问控制">web 服务器访问控制</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-10-12T11:50:32.000Z" title="发表于 2019-10-12 11:50:32">2019-10-12</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/RHCE/">RHCE</a></span></div><div class="content">配置 web 内容访问    在您的system1上的 web 服务器的 DocumentRoot 目录下创建一个名为private 的目录，要求如下:
+    从 http://classroom.example.com/pub/materails/private.html 下载一个文件副本到这个目录，并且命名为 index.html；
+    不要对这个文件的内容做任何修改；
+    从 system1 上，任何人都可以浏览 private 的内容，但是从其他系统不能访问这个目录的内容
+
+
+新建文件夹
+  &gt;# mkdir /var/www/html/private &amp;&amp; cd /var/www/html/private
+
+下载站点文件
+  &gt;# wget -O index.html http://classroom.example.com/pub/materails/private.html
+
+修改配置文件
+  &gt;# vim /etc/httpd/conf.d/web.conf                                    ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/b7a1e4d/" title="链路聚合">     <img class="post_bg" data-lazy-src="/img/c6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="链路聚合"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/b7a1e4d/" title="链路聚合">链路聚合</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-10-12T11:50:32.000Z" title="发表于 2019-10-12 11:50:32">2019-10-12</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/RHCE/">RHCE</a></span></div><div class="content">链路聚合    在system1.example.com 和 system2.example.com 之间配置一个链路 team0: 此链路使用接口 eth1和eth2：
+    此链路在一个接口失效时仍然能工作;
+    此链路在system1使用下面的地址172.24.4.30/255.255.255.0；
+    此链路在system2使用下面的地址172.24.4.40/255.255.255.0；
+    此链路在系统重启之后依然保持正常状态。
+
+system1 配置    &gt;# nmcli connection add type team con-name team0 ifname team0 connection.autoconnect yes config &#39;&#123;&quot;runner&quot;:&#123;&quot;name&quot;:&quot;activebackup&quot;&#125;&#125;&#39;
+    &gt;# nmcli connection add type team-slave con-name eth1  ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/39d9deb3/" title="web 虚拟主机">     <img class="post_bg" data-lazy-src="/img/c12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="web 虚拟主机"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/39d9deb3/" title="web 虚拟主机">web 虚拟主机</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-10-11T11:50:32.000Z" title="发表于 2019-10-11 11:50:32">2019-10-11</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/RHCE/">RHCE</a></span></div><div class="content">扩展 web 服务器 – 配置虚拟主机    在system1上扩展您的 web 服务器，为站点 http://www0.example.com创建一个虚拟主机，然后执行下述步骤:
+    设置 DocumentRoot 为/var/www/virtual；
+    从 http://classroom.example.com/pub/materials/www.html 下载文件并重命名为index.html；
+    不要对文件 index.html 的内容做任何修改；
+    将文件 index.html 放到虚拟主机的 DocumentRoot 目录下；
+    确保 student 用户能够在/var/www/virtual 目录下创建文件；
+    注意：原始站点 http://system1.example.com 必须仍然能够访问，名称服务器 example.com 提供对主机名 www0.example.com 的域名解析
+
+
+新建文件夹
+  &gt;# mkdir /var/www/virtual
+
+下载站点文件
+  &gt;# wget -O /var/www/v ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/b5828723/" title="vsftp + apache 搭建低配图片服务器">     <img class="post_bg" data-lazy-src="/img/c11.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vsftp + apache 搭建低配图片服务器"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/b5828723/" title="vsftp + apache 搭建低配图片服务器">vsftp + apache 搭建低配图片服务器</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-10-04T11:50:32.000Z" title="发表于 2019-10-04 11:50:32">2019-10-04</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/Linux/">Linux</a></span></div><div class="content">因为七牛云图床到期，所以博客和其他网页上的图片资源都无法加载出来。后来考虑到这些图片大多是用于博客中且图片体积也不大，因此考虑在自己的腾讯服务器上搭建一个图片服务器。5M的网络大多也能在三秒以内加载出来。以下是简单的记录。
+
+一、 安装 vsftp12345yum -y install vsftpdsystemctl enable vsftpdsystemctl restart vsftpd
+
+
+
+
+二、 配置 vsftp
+我的 ftp 服务采用的是主动方式，且禁用了匿名用户登录
+
+
+以下是需要修改的 vsftp 配置文件
+
+1234567vim &#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.confanonymous_enable&#x3D;NOlisten&#x3D;YES#listen_ipv6&#x3D;YESuserlist_enable&#x3D;YESuserlist_deny&#x3D;NO
+
+
+添加允许登录的用户，将文件中默认存在的用户全部注释掉，再在最后加上 ftp 用户
+
+123456789101112131415161718192021#  ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/8/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">wayww</div><div class="author-info__description">人活着就不能安于现状</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/way-ww"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/way-ww" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:wangwanway@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/img/alipay.jpg" target="_blank" title="支付宝"><i class="fab fa-alipay"></i></a><a class="social-icon" href="/img/wechat.png" target="_blank" title="微信"><i class="fab fa-weixin"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">坚持每天进步一点点</div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL"><img data-lazy-src="/img/c14.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linuxdeploy无法启动MySQL"/></a><div class="content"><a class="title" href="/posts/b4cac3e6/" title="linuxdeploy无法启动MySQL">linuxdeploy无法启动MySQL</a><time datetime="2019-10-14T12:07:32.000Z" title="发表于 2019-10-14 12:07:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/0/" title="k8s 实践"><img data-lazy-src="/img/c9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s 实践"/></a><div class="content"><a class="title" href="/posts/0/" title="k8s 实践">k8s 实践</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bda00998/" title="Centos7 安装 vsftp"><img data-lazy-src="/img/c7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Centos7 安装 vsftp"/></a><div class="content"><a class="title" href="/posts/bda00998/" title="Centos7 安装 vsftp">Centos7 安装 vsftp</a><time datetime="2019-10-14T11:50:32.000Z" title="发表于 2019-10-14 11:50:32">2019-10-14</time></div></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="card-content"><div class="item-headline"><i class="fas fa-bolt"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.5em; color: rgb(26, 62, 145)">Linux</a><a href="/tags/Archlinux/" style="font-size: 1.26em; color: rgb(109, 177, 191)">Archlinux</a><a href="/tags/RHCE/" style="font-size: 1.42em; color: rgb(100, 124, 137)">RHCE</a><a href="/tags/Command/" style="font-size: 1.34em; color: rgb(10, 19, 177)">Command</a><a href="/tags/Mysql/" style="font-size: 1.1em; color: rgb(173, 159, 81)">Mysql</a><a href="/tags/Docker/" style="font-size: 1.18em; color: rgb(49, 59, 155)">Docker</a><a href="/tags/Kubernetes/" style="font-size: 1.18em; color: rgb(117, 34, 95)">Kubernetes</a></div></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">53</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2018-07-14T16:43:24.000Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">26.3k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-07-02T04:02:48.795Z"></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/bb.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2018 - 2021 By wayww</div><div class="footer_custom_text">想要变强啊，想要像那个人一样，绝对不只是想象！</div><img src="/img/icp.png" align="center" height="18" width="18" style="display:inline-block">
+<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34019102000925" rel="external nofollow noreferrer"  target="_blank">皖公网安备 34019102000925号</a>
+<a href="https://beian.miit.gov.cn/#/Integrated/index" rel="external nofollow noreferrer"  target="_blank">皖ICP备2021008794号</a></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})
+setTimeout(function(){preloader.endLoading();}, 3000);</script></div><div class="js-pjax"><script>function subtitleType () {
+  if (true) { 
+    var typed = new Typed("#subtitle", {
+      strings: "天行健 君子以自强不息 | 地势坤 君子以厚德载物".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = '天行健 君子以自强不息 | 地势坤 君子以厚德载物'
+  }
+}
+
+if (true) {
+  if (typeof Typed === 'function') subtitleType()
+  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js', subtitleType)
+} else {
+  subtitleType()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+    content = content.replace(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png|webp)/g, '') // remove image link
+    content = content.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '') // remove url
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getGithubIssues = () => {
+    let githubArray = []
+    $.getJSON('https://api.github.com/repos/way-ww/comment/issues/comments?sort=updated&direction=desc&per_page=5&page=1', (data) => { 
+      $.each(data, (index, item) => {
+        githubArray.push({
+          'avatar': item.user.avatar_url,
+          'content': changeContent(item.body),
+          'nick': item.user.login,
+          'url': item.html_url,
+          'date': item.updated_at
+        })
+      })
+      saveToLocal.set('github-newest-comments', JSON.stringify(githubArray), 10/(60*24))
+      generateHtml(githubArray)
+    }).fail(()=>{
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.innerHTML= "无法获取资料，请确认相关配置是否正确"
+    })
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    for (let i = 0; i < array.length; i++) {
+      result += '<div class=\'aside-list-item\'>'
+
+      if (false) {
+        result += `<a href='${array[i].url}' class="thumbnail"><img src='${array[i].avatar}' alt='${array[i].nick}'></a>`
+      }
+
+      result += `<div class='content'>
+      <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+      <div class='name'><span>${array[i].nick}</span><time> / ${btf.diffDate(array[i].date, true)}</time></div>
+      </div></div>`
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('github-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getGithubIssues()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>
